@@ -3,18 +3,19 @@ import numpy as np
 import random
 import os
 import pandas as pd
+# pip install openpyxl
 
 # 파라미터 설정
 screen_size = (1920, 1080)
-fps = 20
+fps = 10
 text_duration = 3  # 이미지 표시 시간 (초)
 black_min = 3  # 검정 화면 최소 시간 (초)
 black_max = 3  # 검정 화면 최대 시간 (초)
-output_file = "experiment_video5.mp4"
-excel_output = "experiment_epochs5.xlsx"
+output_file = "experiment_video_001.mp4"
+excel_output = "experiment_epochs_001.xlsx"
 
 # 이미지 파일 경로
-image_folder = "Image"
+image_folder = r"D:\W00Y0NG\PRGM2\2025BCI\current_experiments\CODE\0_making_video\Image"
 image_files = {
     "Hello": os.path.join(image_folder, "hello.png"),
     "Thank you": os.path.join(image_folder, "thanku.png"),
@@ -22,7 +23,7 @@ image_files = {
     "Help me": os.path.join(image_folder, "helpme.png")
 }
 
-# 각 이미지 5번씩 등장, 순서 랜덤
+# 각 이미지 30번씩 등장, 순서 랜덤-
 stimuli_list = list(image_files.items()) * 30
 random.shuffle(stimuli_list)
 

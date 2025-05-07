@@ -49,9 +49,36 @@ classdef EEGPreprocessor
         %% ADJUST 실행 (자동 제거 X)
         function obj = runADJUST(obj)
             report_name = fullfile(pwd, ['ADJUST_Report_' datestr(now,'yyyymmdd_HHMMSS') '.txt']);
-            [~, ~, ~, ~, ~, ~, ~, ~, ~] = ADJUST(obj.EEG, report_name);
-            disp('ADJUST complete.');
+        
+            backupICA = struct();
+            if isfield(obj.EEG, 'icaweights'),  backupICA.icaweights  = obj.EEG.icaweights; end
+            if isfield(obj.EEG, 'icasphere'),   backupICA.icasphere   = obj.EEG.icasphere; end
+            if isfield(obj.EEG, 'icachansind'), backupICA.icachansind = obj.EEG.icachansind; end
+        
+            try
+                % reshape compatibility 조정
+                data2D = reshape(obj.EEG.data, size(obj.EEG.data, 1), []);
+                ica_result = obj.EEG.icaweights * obj.EEG.icasphere * data2D;
+        
+                pca_dim = size(ica_result, 1);
+                obj.EEG.icaact = reshape(ica_result, pca_dim, size(obj.EEG.data, 2), size(obj.EEG.data, 3));
+        
+                EEG_adjusted = ADJUST(obj.EEG, report_name);
+                if iscell(EEG_adjusted), EEG_adjusted = EEG_adjusted{1}; end
+        
+                if ~isfield(EEG_adjusted, 'icaweights') && isfield(backupICA, 'icaweights')
+                    EEG_adjusted.icaweights  = backupICA.icaweights;
+                    EEG_adjusted.icasphere   = backupICA.icasphere;
+                    EEG_adjusted.icachansind = backupICA.icachansind;
+                end
+        
+                obj.EEG = EEG_adjusted;
+                disp('ADJUST complete.');
+            catch ME
+                warning('ADJUST 실행 중 오류 발생: %s', ME.message);
+            end
         end
+
 
         %% 평균 재참조
         function obj = rereference(obj)

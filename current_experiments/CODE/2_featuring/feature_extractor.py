@@ -33,12 +33,12 @@ class DWTFeatureExtractor:
 
         return time_features, freq_features
     
-    # 시간/주파수 특징 평탄화 함수
-    def flatten_feature_dict(feature_dict):
-        flat_list = []
-        for band in feature_dict:
-            flat_list.append(feature_dict[band])
-        return np.concatenate(flat_list, axis=1)  # (epochs, features)
+    def flatten_feature_dict(self, feature_dict, bands):
+        all_features = []
+        for band in bands:
+            all_features.append(feature_dict[band])
+        all_features = np.stack(all_features, axis=1)
+        return all_features.reshape(all_features.shape[0], -1)
 
 
     def _extract_time_features(self, x):

@@ -3,8 +3,8 @@ from feature_extractor import DWTFeatureExtractor
 import numpy as np
 
 # 파일 경로 설정
-mat_path = './subject1_cleaned.mat'
-label_csv_path = './subject1_labels.csv'
+mat_path = r'D:\W00Y0NG\PRGM2\2025BCI\current_experiments\DATA\processed\subject1_cleaned.mat'
+label_csv_path = r'D:\W00Y0NG\PRGM2\2025BCI\current_experiments\DATA\processed\subject1_labels.csv'
 
 # 데이터셋 생성 및 불필요한 break 제거
 dataset = EEGDataset(mat_path, label_csv_path)

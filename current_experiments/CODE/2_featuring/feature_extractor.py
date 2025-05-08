@@ -1,6 +1,8 @@
 import numpy as np
 import pywt
 from scipy.stats import skew, kurtosis, entropy
+from sklearn.preprocessing import LabelEncoder
+from mne.decoding import CSP
 
 class DWTFeatureExtractor:
     def __init__(self, fs=125, wavelet='coif5', level=5):
@@ -32,13 +34,16 @@ class DWTFeatureExtractor:
             freq_features[band] = np.array(freq_features[band])
 
         return time_features, freq_features
-    
+
     def flatten_feature_dict(self, feature_dict, bands):
         all_features = []
         for band in bands:
-            all_features.append(feature_dict[band])
-        all_features = np.stack(all_features, axis=1)
-        return all_features.reshape(all_features.shape[0], -1)
+            f = feature_dict[band]  # (n_epochs * n_channels, n_features)
+            n_epochs = len(f) // 16
+            f = f.reshape(n_epochs, 16, f.shape[-1])
+            f = f.reshape(n_epochs, -1)
+            all_features.append(f)
+        return np.concatenate(all_features, axis=1)  # (n_epochs, total_features)
 
 
     def _extract_time_features(self, x):
@@ -55,3 +60,19 @@ class DWTFeatureExtractor:
         ent = entropy(prob)
         std = np.std(x)
         return [energy, ent, std]
+
+    def extract_csp_features(self, eeg_data, labels, n_components=4):
+        eeg_data = eeg_data.astype(np.float64)
+        le = LabelEncoder()
+        y = le.fit_transform(labels)
+        classes = np.unique(y)
+
+        csp_features = []
+        for c in classes:
+            y_binary = (y == c).astype(int)
+            csp = CSP(n_components=n_components, log=True)
+            X_csp = csp.fit_transform(eeg_data, y_binary)
+            csp_features.append(X_csp)
+
+        return np.concatenate(csp_features, axis=1)
+

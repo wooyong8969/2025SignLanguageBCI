@@ -1,8 +1,17 @@
-### [EXP_001] 2024-05-12 (예시)
+### [EXP_001] 2025-05-07
 
-- 사용한 데이터: 08processedEEG_scaled.set
-- 사용한 코드 파일: training0319.mlx
-- 전처리 방법: Bandpass(1-50Hz), CSP
+- 사용한 비디오
+    : experiment_video_001.mp4
+    -> 자극 3초 / 휴식 3초 / 언어 자극 / 30번*4class
+    -> 안녕하세요, 감사합니다, 죄송합니다, 도와주세요
+- 전처리 방법
+    : Bandpass(0.5-40Hz), Notch(60Hz), ICA+ADJUST, CAR
+- 특징 추출 방법
+    : DWT(wavelet='coif1', level=5)
+    : cA5, cD5-cD1까지 6개 대역의 계수 추출
+    : 각 대역별 RMS, Variance, Skewness, Kurtosis, AAV 추출
+    : 각 대역별 Energy, Entropy, Standard Deviation 추출
+    
 - 분류 모델: SVM (linear kernel)
 - 주요 하이퍼파라미터: C=1.0, gamma='scale'
 - 정확도 (훈련/검증): Train 84%, Test 60%

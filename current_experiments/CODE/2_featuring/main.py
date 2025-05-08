@@ -20,13 +20,24 @@ pipeline = Pipeline([
 features_path = r'current_experiments\DATA\processed\experiment_001_processed_features.npy'
 labels_path = r'current_experiments\DATA\processed\experiment_001_encoded_labels.npy'
 
-# ---------- 2. 특징 추출하기 ---------- #
+
+# ---------- 1. 특징 load ---------- #
+
 if os.path.exists(features_path) and os.path.exists(labels_path):
     print("저장된 feature 파일 불러오는 중...")
     features = np.load(features_path)
     encoded_labels = np.load(labels_path)
 else:
     print("저장된 feature 파일이 없습니다.")
+
+
+# ---------- 2. 특징 선택 ---------- #
+
+selected_features = pipeline.fit_transform(features, encoded_labels)
+
+print("기존 feature shape:", features.shape)
+print("최종 feature shape:", selected_features.shape)
+print("최종 라벨 개수:", len(encoded_labels))
 
 # # 특징 선택 적용 p-value는 실패함
 # features = pipeline.fit_transform(features, encoded_labels)
@@ -42,11 +53,6 @@ else:
 # # p < 0.05인 특징만 선택
 # mask = p_values < 0.1
 
-selected_features = features
-
-
-print("최종 feature shape:", selected_features.shape)
-print("최종 라벨 개수:", len(encoded_labels))
 
 # ---------- 3. 모델 학습 ---------- #
 

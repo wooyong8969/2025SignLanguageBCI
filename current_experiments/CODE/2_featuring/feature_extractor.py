@@ -83,5 +83,3 @@ class DWTFeatureExtractor:
         covs = Covariances(estimator='oas').transform(eeg_data)
         ts = TangentSpace().fit_transform(covs)
         return ts
-
-

@@ -38,12 +38,12 @@ class DWTFeatureExtractor:
     def flatten_feature_dict(self, feature_dict, bands):
         all_features = []
         for band in bands:
-            f = feature_dict[band]  # (n_epochs * n_channels, n_features)
+            f = feature_dict[band]
             n_epochs = len(f) // 16
             f = f.reshape(n_epochs, 16, f.shape[-1])
             f = f.reshape(n_epochs, -1)
             all_features.append(f)
-        return np.concatenate(all_features, axis=1)  # (n_epochs, total_features)
+        return np.concatenate(all_features, axis=1)
 
 
     def _extract_time_features(self, x):

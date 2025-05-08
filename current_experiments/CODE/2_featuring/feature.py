@@ -20,22 +20,18 @@ encoded_labels = le.fit_transform(labels)  # y가 ['left', 'right', 'left', ...]
 
 
 # ---------- 2. 특징 추출하기 ---------- #
-if os.path.exists(r'current_experiments\DATA\processed\experiment_001_processed_features.npy') and os.path.exists(r'current_experiments\DATA\processed\experiment_001_encoded_labels.npy'):
-    print("저장된 feature 파일 불러오는 중...")
-    features = np.load(r'current_experiments\DATA\processed\experiment_001_processed_features.npy')
-    encoded_labels = np.load(r'current_experiments\DATA\processed\experiment_001_encoded_labels.npy')
-else:
-    print("특징 추출 중...")
-    extractor = DWTFeatureExtractor(wavelet='coif1', level=5)
-    time_features, freq_features = extractor.extract(eeg)
+print("특징 추출 중...")
+extractor = DWTFeatureExtractor(wavelet='coif1', level=5)
+time_features, freq_features = extractor.extract(eeg)
 
-    flat_time = extractor.flatten_feature_dict(time_features, extractor.bands)
-    flat_freq = extractor.flatten_feature_dict(freq_features, extractor.bands)
-    csp_features = extractor.extract_csp_features(eeg, labels, n_components=4)
+flat_time = extractor.flatten_feature_dict(time_features, extractor.bands)
+flat_freq = extractor.flatten_feature_dict(freq_features, extractor.bands)
+csp_features = extractor.extract_csp_features(eeg, labels, n_components=4)
+riemannian_features = extractor.extract_riemannian_features(eeg)
 
-    features = np.concatenate([flat_time, flat_freq, csp_features], axis=1)
-    n_epochs = eeg.shape[0]
-    features = features.reshape(n_epochs, -1)
+features = np.concatenate([flat_time, flat_freq, csp_features, riemannian_features], axis=1)
+n_epochs = eeg.shape[0]
+features = features.reshape(n_epochs, -1)
 
-    np.save(r'current_experiments\DATA\processed\experiment_001_processed_features.npy', features)
-    np.save(r'current_experiments\DATA\processed\experiment_001_encoded_labels.npy', encoded_labels)
+np.save(r'current_experiments\DATA\processed\experiment_001_processed_features.npy', features)
+np.save(r'current_experiments\DATA\processed\experiment_001_encoded_labels.npy', encoded_labels)

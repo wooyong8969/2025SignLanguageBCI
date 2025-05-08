@@ -3,6 +3,8 @@ import pywt
 from scipy.stats import skew, kurtosis, entropy
 from sklearn.preprocessing import LabelEncoder
 from mne.decoding import CSP
+from pyriemann.estimation import Covariances
+from pyriemann.tangentspace import TangentSpace
 
 class DWTFeatureExtractor:
     def __init__(self, fs=125, wavelet='coif5', level=5):
@@ -75,4 +77,11 @@ class DWTFeatureExtractor:
             csp_features.append(X_csp)
 
         return np.concatenate(csp_features, axis=1)
+    
+    def extract_riemannian_features(self, eeg_data):
+        eeg_data = eeg_data.astype(np.float64)
+        covs = Covariances(estimator='oas').transform(eeg_data)
+        ts = TangentSpace().fit_transform(covs)
+        return ts
+
 

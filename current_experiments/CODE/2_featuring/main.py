@@ -4,10 +4,9 @@ import numpy as np
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.svm import SVC
 from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.pipeline import make_pipeline, Pipeline
+from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.linear_model import LogisticRegression
-from sklearn.feature_selection import SelectFromModel
-import pyriemann
+from sklearn.feature_selection import SelectFromModel, SelectKBest, f_classif
 import os
 
 # X: 추출한 전체 특징 벡터
@@ -18,47 +17,33 @@ pipeline = Pipeline([
     ('scaler', StandardScaler()),
     ('feature_selection', SelectFromModel(LogisticRegression(penalty='l1', solver='liblinear', C=0.1))),
 ])
-
-mat_path = r'current_experiments\DATA\processed\experiment_001_cleaned.mat'
-label_csv_path = r'current_experiments\DATA\processed\experiment_001_labels.csv'
-
-# ---------- 1.  전처리 된 데이터셋 load ---------- #
-dataset = EEGDataset(mat_path, label_csv_path)
-dataset.remove_break()
-
-eeg, labels, fs = dataset.get_data()
-le = LabelEncoder()
-encoded_labels = le.fit_transform(labels)
-
-# ---------- 2. 특징 추출 ---------- #
-
-if os.path.exists(r'current_experiments\CODE\2_featuring\processed_features_.npy') and os.path.exists(r'current_experiments\CODE\2_featuring\encoded_labels_.npy'):
+features_path = r'current_experiments\DATA\processed\experiment_001_processed_features.npy'
+labels_path = r'current_experiments\DATA\processed\experiment_001_encoded_labels.npy'
+# ---------- 2. 특징 추출하기 ---------- #
+if os.path.exists(features_path) and os.path.exists(labels_path):
     print("저장된 feature 파일 불러오는 중...")
-    features = np.load(r'current_experiments\CODE\2_featuring\processed_features_.npy')
-    encoded_labels = np.load(r'current_experiments\CODE\2_featuring\encoded_labels_.npy')
-else:
-    print("특징 추출 중...")
-    extractor = DWTFeatureExtractor(wavelet='coif1', level=5)
-    time_features, freq_features = extractor.extract(eeg)
+    features = np.load(features_path)
+    encoded_labels = np.load(labels_path)
 
-    flat_time = extractor.flatten_feature_dict(time_features, extractor.bands)
-    flat_freq = extractor.flatten_feature_dict(freq_features, extractor.bands)
-    csp_features = extractor.extract_csp_features(eeg, labels, n_components=4)
-    riemannian_features = extractor.extract_riemannian_features(eeg)
+# # 특징 선택 적용 p-value는 실패함
+# features = pipeline.fit_transform(features, encoded_labels)
 
-    features = np.concatenate([flat_time, flat_freq], axis=1)
-    n_epochs = eeg.shape[0]
-    features = features.reshape(n_epochs, -1)
+# # ANOVA F-test를 기반으로 특징 선택
+# selector = SelectKBest(score_func=f_classif, k='all')  # 전체 p-value 확인
+# selector.fit(features, encoded_labels)
 
-    np.save(r'current_experiments\CODE\2_featuring\processed_features_.npy', features)
-    np.save(r'current_experiments\CODE\2_featuring\encoded_labels_.npy', encoded_labels)
+# # 각 특징에 대한 p-value 확인
+# p_values = selector.pvalues_
+# print("각 특징의 p-value:", p_values)
 
-# ---------- 4. 특징 선택 ---------- #
-selected_features = pipeline.fit_transform(features, encoded_labels)
+# # p < 0.05인 특징만 선택
+# mask = p_values < 0.1
 
-print("기존 feature shape:", features.shape)
+selected_features = features
+
+
 print("최종 feature shape:", selected_features.shape)
-print("최종 라벨 개수:", len(labels))
+print("최종 라벨 개수:", len(encoded_labels))
 
 # ---------- 3. 모델 학습 ---------- #
 

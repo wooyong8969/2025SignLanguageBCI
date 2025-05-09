@@ -1,0 +1,59 @@
+### [EXP_001] 2025-05-07 ~ 2025-05-08
+
+- 사용한 비디오
+  : experiment_video_001.mp4
+  -> 자극 3초 / 휴식 3초 / 언어 자극
+  -> 총 30 epoch × 4 class × 2회 반복
+  -> 자극어: 안녕하세요, 감사합니다, 죄송합니다, 도와주세요
+
+- 전처리 방법
+  - Bandpass filter: 0.5–40 Hz (4차 Butterworth)
+  - Notch filter: 60 Hz 제거 (전원 노이즈)
+  - ICA + ADJUST: 아티팩트 자동 탐지 및 수동 제거
+  - 평균 재참조 (CAR: Common Average Reference)
+
+- 특징 추출 방법  
+  - DWT (Wavelet: coif1, level=5)
+    -> 대역: cA5, cD5, cD4, cD3, cD2, cD1 (총 6대역)
+  - 시간 영역 특징 (각 대역당):
+    - RMS (Root Mean Square)
+    - Variance
+    - Skewness
+    - Kurtosis
+    - AAV (Average Absolute Value)
+  - 주파수 영역 특징 (각 대역당):
+    - Energy
+    - Entropy
+    - Standard Deviation
+  - 공간 특징:
+    - CSP
+    - Riemannian geometry 기반 Tangent Space projection (pyRiemann 이용)
+
+- 분류 모델  
+  - SVM
+  - 커널: RBF 
+  - 입력 특징: DWT + 공간 특징 결합
+
+- 주요 하이퍼파라미터  
+  - C = 1
+  - gamma = 'scale'
+  - test_size = 0.2
+
+- 정확도 (훈련/검증)
+  - 훈련 정확도: 0.9844
+  - 학습 정확도: 0.5417
+
+- 문제점 / 관찰사항  
+  - p-value 기반 feature selection (SelectFdr)은 유의한 feature를 거의 선택하지 못함
+    -> EEG 특성상 분산이 높아 통계적 방법 한계  
+  - CSP 기반 공간 특징은 multi-class 문제에서 과적합 심각
+    -> Riemann 기반으로 대체했음에도 학습 정확도 동일일
+  - 일부 클래스 간 EEG 분포 유사
+    -> confusion matrix 분석 필요
+
+- 다음 실험 방향  
+  - class별 confusion matrix 분석 및 F1-score 계산  
+  - DWT 외에 PSD, HHT, band power 등의 다른 특징과 비교  
+  - 모델 다양화: Random Forest, Logistic Regression, LDA 등과 비교  
+  - Filter-Bank 기반 Riemannian 특징(FBR) 적용 시도  
+  - 실시간 분류 구조로 확장 검토

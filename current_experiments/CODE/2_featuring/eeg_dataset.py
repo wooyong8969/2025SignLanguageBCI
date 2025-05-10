@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import h5py
+import scipy.io as sio
 
 class EEGDataset:
     def __init__(self, mat_path, label_csv_path):
@@ -8,14 +9,21 @@ class EEGDataset:
         self.labels = self._load_labels(label_csv_path)
         print(f"EEG: {self.eeg.shape}, sf: {self.fs}, Labels: {len(self.labels)})")
 
-    def _load_mat(self, path):
-        with h5py.File(path, 'r') as f:
-            data = f['EEG_clean']['data']
-            eeg = np.array(data).astype(np.float32)
-            eeg = np.transpose(eeg, (0, 2, 1))  # epochs, channels, samples
-            fs = f['EEG_clean']['srate'][0][0]
-        return eeg, fs
+    # def _load_mat(self, path):
+    #     with h5py.File(path, 'r') as f:
+    #         data = f['EEG_clean']['data']
+    #         eeg = np.array(data).astype(np.float32)
+    #         eeg = np.transpose(eeg, (0, 2, 1))  # epochs, channels, samples
+    #         fs = f['EEG_clean']['srate'][0][0]
+    #     return eeg, fs
 
+    def _load_mat(self, path):
+        mat = sio.loadmat(path, struct_as_record=False, squeeze_me=True)
+        eeg_struct = mat['EEG_clean']
+        eeg = eeg_struct.data.astype(np.float32)           # shape: (epochs, samples, channels)
+        eeg = np.transpose(eeg, (0, 2, 1))                  # → (epochs, channels, samples)
+        fs = float(eeg_struct.srate)
+        return eeg, fs
 
     def _load_labels(self, path):
         labels = pd.read_csv(path, header=None).iloc[:, 0].tolist()

@@ -24,8 +24,8 @@ pipeline = Pipeline([
     # ('pca', PCA(n_components=30)),
 ])
 
-features_path = r'current_experiments\DATA\processed\experiment_001_augmented_features.npy'
-labels_path = r'current_experiments\DATA\processed\experiment_001_augmented_labels.npy'
+features_path = r'current_experiments\DATA\processed\experiment_001_py_augmented_features.npy'
+labels_path = r'current_experiments\DATA\processed\experiment_001_py_augmented_labels.npy'
 
 # ---------- 1. 특징 load ---------- #
 

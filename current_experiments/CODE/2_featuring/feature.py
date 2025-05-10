@@ -7,12 +7,13 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.feature_selection import SelectFromModel
 from eeg_augmenter import EEGAugmenter
 import os
+import scipy.io as sio
 
-mat_path = r'current_experiments\DATA\processed\experiment_001_cleaned.mat'
-label_csv_path = r'current_experiments\DATA\processed\experiment_001_labels.csv'
+mat_path = r'current_experiments\DATA\processed\experiment_001\experiment_001_py_cleaned.mat'
+label_csv_path = r'current_experiments\DATA\processed\experiment_001\experiment_001_py_labels.csv'
 
-features_path = r'current_experiments\DATA\processed\experiment_001_augmented_features.npy'
-labels_path = r'current_experiments\DATA\processed\experiment_001_augmented_labels.npy'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001_py_augmented_features.npy'
+labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001_py_augmented_labels.npy'
 
 
 # ---------- 1. 전처리 된 데이터셋 불러오기 ---------- #

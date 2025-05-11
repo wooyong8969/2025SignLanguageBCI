@@ -104,7 +104,6 @@ class EEGPreprocessor:
         self.epochs = self.epochs.copy().set_eeg_reference('average', projection=False)
 
     def save(self, save_dir, base_name, save_mat=True):
-        self.epochs.save(f"{save_dir}/{base_name}_cleaned-epo.fif", overwrite=True)
         with open(f"{save_dir}/{base_name}_labels.csv", 'w') as f:
             for label in self.labels:
                 f.write(f"{label}\n")
@@ -123,10 +122,10 @@ class EEGPreprocessor:
 
 
 if __name__ == "__main__":
-    csv_path = r'current_experiments\DATA\raw\experiment_001\combined.csv'
-    epoch_table_path = r'current_experiments\DATA\video\experiment_001_epochs_combined.xlsx'
+    csv_path = r'current_experiments\DATA\raw\experiment_002\MI_10.csv'
+    epoch_table_path = r'current_experiments\DATA\video\experiment_002_10_epochs.xlsx'
     save_dir = r'current_experiments\DATA\processed'
-    base_name = 'experiment_001_py'
+    base_name = 'experiment_002_MI(1)'
 
     selected_labels = ['FP1','FP2','C3','C4','P7','P8','O1','O2',
                        'F7','F8','F3','F4','T7','T8','P3','P4']

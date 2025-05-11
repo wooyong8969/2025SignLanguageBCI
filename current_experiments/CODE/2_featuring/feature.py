@@ -9,11 +9,11 @@ from eeg_augmenter import EEGAugmenter
 import os
 import scipy.io as sio
 
-mat_path = r'current_experiments\DATA\processed\experiment_001\experiment_001_py_cleaned.mat'
-label_csv_path = r'current_experiments\DATA\processed\experiment_001\experiment_001_py_labels.csv'
+mat_path = r'current_experiments\DATA\processed\experiment_002\experiment_002_MI(1)_cleaned.mat'
+label_csv_path = r'current_experiments\DATA\processed\experiment_002\experiment_002_MI(1)_labels.csv'
 
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001_py_augmented_features.npy'
-labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001_py_augmented_labels.npy'
+features_path = r'current_experiments\DATA\processed\experiment_002\experiment_002_MI(1)_augmented_features.npy'
+labels_path = r'current_experiments\DATA\processed\experiment_002\experiment_002_MI(1)_augmented_labels.npy'
 
 
 # ---------- 1. 전처리 된 데이터셋 불러오기 ---------- #
@@ -23,7 +23,7 @@ dataset.remove_break()
 
 eeg, labels, fs = dataset.get_data()
 le = LabelEncoder()
-encoded_labels = le.fit_transform(labels)  # y가 ['left', 'right', 'left', ...] 등이라면 0, 1로 변환됨
+encoded_labels = le.fit_transform(labels)
 
 
 # ---------- 2. 데이터 증강하기 ---------- #

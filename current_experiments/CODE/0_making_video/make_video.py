@@ -11,8 +11,8 @@ fps = 10
 text_duration = 3  # 이미지 표시 시간 (초)
 black_min = 3  # 검정 화면 최소 시간 (초)
 black_max = 3  # 검정 화면 최대 시간 (초)
-output_file = r"current_experiments\DATA\video\experiment_002_video.mp4"
-excel_output = r"current_experiments\DATA\video\experiment_002_epochs.xlsx"
+output_file = r"current_experiments\DATA\video\experiment_002_10_video.mp4"
+excel_output = r"current_experiments\DATA\video\experiment_002_10_epochs.xlsx"
 
 # 이미지 파일 경로
 image_folder = r"D:\W00Y0NG\PRGM2\2025BCI\current_experiments\CODE\0_making_video\Image"

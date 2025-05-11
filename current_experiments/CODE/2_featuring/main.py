@@ -1,5 +1,3 @@
-from eeg_dataset import EEGDataset
-from feature_extractor import DWTFeatureExtractor
 import numpy as np
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.svm import SVC
@@ -24,8 +22,8 @@ pipeline = Pipeline([
     # ('pca', PCA(n_components=30)),
 ])
 
-features_path = r'current_experiments\DATA\processed\experiment_001_processed_features.npy'
-labels_path = r'current_experiments\DATA\processed\experiment_001_encoded_labels.npy'
+features_path = r'current_experiments\DATA\processed\experiment_002\experiment_002_MI(1)_augmented_features.npy'
+labels_path = r'current_experiments\DATA\processed\experiment_002\experiment_002_MI(1)_augmented_labels.npy'
 
 # ---------- 1. 특징 load ---------- #
 

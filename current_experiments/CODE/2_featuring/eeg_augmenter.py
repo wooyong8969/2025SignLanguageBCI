@@ -24,7 +24,7 @@ class EEGAugmenter:
             augmented_labels.append(y)
 
             for _ in range(num_augments - 1):  # N-1개 증강본
-                choice = np.random.choice(['noise', 'shift', 'noise+shift'])
+                choice = np.random.choice(['shift'])
                 if choice == 'noise':
                     x_aug = self._add_noise(x)
                 elif choice == 'shift':

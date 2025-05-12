@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDis
 import matplotlib.pyplot as plt
 
 # 경로 설정
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(2)_features.npy'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(4)_features.npy'
 true_label_path = r'current_experiments\DATA\video\experiment_001_30_epochs.xlsx'
 
 # 모델 및 변환기 로드
@@ -39,9 +39,8 @@ print(f"정확도: {accuracy:.04f}%")
 # 혼동 행렬 출력 및 시각화
 cm = confusion_matrix(true_encoded, pred)
 
-
 disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=le.classes_)
 disp.plot(cmap='Blues', xticks_rotation=45)
-plt.title("Confusion Matrix (Break 제외)")
+plt.title("Confusion Matrix (remove Break)")
 plt.tight_layout()
 plt.show()

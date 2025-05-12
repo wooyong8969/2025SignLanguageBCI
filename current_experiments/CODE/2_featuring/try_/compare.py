@@ -6,8 +6,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score
 
 # ---------- 1. 데이터 로드 ---------- #
-path1 = r'current_experiments/DATA/processed/experiment_001/experiment_001(1)_TFS_features.npy'
-path2 = r'current_experiments/DATA/processed/experiment_001/experiment_001(2)_TFS_features.npy'
+path1 = r'current_experiments\DATA\processed\experiment_001\experiment_001(1)_features.npy'
+path2 = r'current_experiments\DATA\processed\experiment_001\experiment_001(2)_features.npy'
 
 features_1 = np.load(path1)
 features_2 = np.load(path2)

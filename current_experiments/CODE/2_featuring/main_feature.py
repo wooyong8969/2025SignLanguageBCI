@@ -10,11 +10,11 @@ import os
 import scipy.io as sio
 from joblib import dump, load
 
-mat_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-3)_cleaned.mat'
-label_csv_path = r'D:\W00Y0NG\PRGM2\2025BCI\current_experiments\DATA\processed\experiment_001\experiment_001(1-3)_labels.csv'
+mat_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(3)_cleaned.mat'
+label_csv_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(3)_labels.csv'
 
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-3)_features.npy'
-labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-3)_labels.npy'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(3)_features.npy'
+labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(3)_labels.npy'
 
 
 # ---------- 1. 전처리 된 데이터셋 불러오기 ---------- #
@@ -24,7 +24,7 @@ dataset.remove_break()
 
 eeg, labels, fs = dataset.get_data()
 #le = LabelEncoder()
-le = load('label_encoder.joblib')
+le = load(r'current_experiments\MODEL\label_encoder.joblib')
 encoded_labels = le.fit_transform(labels)
 
 

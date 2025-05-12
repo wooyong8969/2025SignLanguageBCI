@@ -1,4 +1,3 @@
-
 import numpy as np
 import pandas as pd
 from scipy.signal import butter, filtfilt
@@ -100,6 +99,12 @@ class EEGPreprocessor:
         self.ica.exclude = list(to_remove)
         self.epochs = self.ica.apply(self.epochs.copy())
 
+    def apply_zscore(self):
+        data = self.epochs.get_data()
+        mean = np.mean(data, axis=2, keepdims=True)
+        std = np.std(data, axis=2, keepdims=True) + 1e-8
+        self.epochs._data = (data - mean) / std
+
     def rereference(self):
         self.epochs = self.epochs.copy().set_eeg_reference('average', projection=False)
 
@@ -122,15 +127,16 @@ class EEGPreprocessor:
 
 
 if __name__ == "__main__":
-    csv_path = r'current_experiments\DATA\raw\experiment_001\SI_30(2).csv'
+    csv_path = r'current_experiments\DATA\raw\experiment_001\SI_30(1).csv'
     epoch_table_path = r'current_experiments\DATA\video\experiment_001_30_epochs.xlsx'
     save_dir = r'current_experiments\DATA\processed\experiment_001'
-    base_name = 'experiment_001(2)'
+    base_name = 'experiment_001(1)'
 
     selected_labels = ['FP1','FP2','C3','C4','P7','P8','O1','O2',
                        'F7','F8','F3','F4','T7','T8','P3','P4']
     
     pre = EEGPreprocessor(csv_path, epoch_table_path, selected_labels)
+    pre.apply_zscore()
     pre.apply_bandpass()
     pre.apply_notch()
     pre.apply_ica()

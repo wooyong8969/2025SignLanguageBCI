@@ -9,10 +9,10 @@ features_path = r'current_experiments\DATA\processed\experiment_001\experiment_0
 true_label_path = r'current_experiments\DATA\video\experiment_001_30_epochs.xlsx'
 
 # 모델 및 변환기 로드
-clf = load('trained_model.joblib')
-pipeline = load('feature_selector.joblib')
-lda = load('lda_reducer.joblib')
-le = load('label_encoder.joblib')
+clf = load(r'current_experiments\MODEL\trained_model.joblib')
+pipeline = load(r'current_experiments\MODEL\feature_selector.joblib')
+lda = load(r'current_experiments\MODEL\lda_reducer.joblib')
+le = load(r'current_experiments\MODEL\label_encoder.joblib')
 
 # 특징 로드
 features = np.load(features_path)

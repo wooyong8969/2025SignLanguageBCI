@@ -14,8 +14,8 @@ from collections import Counter
 from mpl_toolkits.mplot3d import Axes3D
 
 # ---------- 1. 파일 경로 ---------- #
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-3)_features.npy'
-labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-3)_labels.npy'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-4)_train_cleaned.npy'
+labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-4)_train_labels.npy'
 
 # ---------- 2. 특징 load ---------- #
 if os.path.exists(features_path) and os.path.exists(labels_path):

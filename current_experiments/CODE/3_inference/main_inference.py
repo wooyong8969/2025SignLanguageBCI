@@ -5,8 +5,8 @@ from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDis
 import matplotlib.pyplot as plt
 
 # 경로 설정
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(4)_features.npy'
-true_label_path = r'current_experiments\DATA\video\experiment_001_30_epochs.xlsx'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-4)_test_cleaned.npy'
+true_label_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-4)_test_labels.csv'
 
 # 모델 및 변환기 로드
 clf = load('trained_model.joblib')
@@ -24,8 +24,8 @@ pred = clf.predict(reduced)
 pred_labels = le.inverse_transform(pred)
 
 # 실제 라벨 로드 및 Break 제외
-df = pd.read_excel(true_label_path)
-true_labels_full = df.iloc[:, 2].astype(str).tolist()
+df = pd.read_csv(true_label_path, header=None)
+true_labels_full = df.iloc[:, 0].astype(str).tolist()
 true_labels = [lbl for lbl in true_labels_full if lbl != 'Break']
 
 # 라벨 수와 예측 수 확인

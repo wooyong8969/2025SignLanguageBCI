@@ -3,7 +3,8 @@ import os
 
 csv_files = [
     r"current_experiments\DATA\raw\experiment_001\SI_30(1).csv",
-    r"current_experiments\DATA\raw\experiment_001\SI_30(3).csv"
+    r"current_experiments\DATA\raw\experiment_001\SI_30(3).csv",
+    r"current_experiments\DATA\raw\experiment_001\SI_30(4).csv",
 ]
 
 raw_data_combined = pd.concat(
@@ -11,13 +12,16 @@ raw_data_combined = pd.concat(
     ignore_index=True
 )
 
-raw_data_combined.to_csv(r"current_experiments\DATA\raw\experiment_001\SI_30(1-3).csv", sep='\t', header=False, index=False)
+print(len(raw_data_combined))
+
+raw_data_combined.to_csv(r"current_experiments\DATA\raw\experiment_001\SI_30(1-4).csv", sep='\t', header=False, index=False)
 print("CSV 병합 완료.")
 
 
 excel_files = [
     r"current_experiments\DATA\video\experiment_001_30_epochs.xlsx",
-    r"current_experiments\DATA\video\experiment_001_30_epochs.xlsx"
+    r"current_experiments\DATA\video\experiment_001_30_epochs.xlsx",
+    r"current_experiments\DATA\video\experiment_001_30_epochs.xlsx",
 ]
 
 epoch_combined = pd.concat(
@@ -25,5 +29,5 @@ epoch_combined = pd.concat(
     ignore_index=True
 )
 
-epoch_combined.to_excel(r"current_experiments\DATA\video\experiment_001_60_epochs.xlsx", index=False)
+epoch_combined.to_excel(r"current_experiments\DATA\video\experiment_001_90_epochs.xlsx", index=False)
 print("Excel 병합 완료.")

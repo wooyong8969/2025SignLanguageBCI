@@ -127,17 +127,10 @@ class EEGPreprocessor:
 
 
 if __name__ == "__main__":
-<<<<<<< HEAD
-    csv_path = r'current_experiments\DATA\raw\experiment_001\SI_30(3).csv'
-    epoch_table_path = r'current_experiments\DATA\video\experiment_001_30_epochs.xlsx'
-    save_dir = r'current_experiments\DATA\processed\experiment_001'
-    base_name = 'experiment_001(3)'
-=======
     csv_path = r'current_experiments\DATA\raw\experiment_001\SI_30(1-6).csv'
     epoch_table_path = r'current_experiments\DATA\video\experiment_001_180_epochs.xlsx'
     save_dir = r'current_experiments\DATA\processed\experiment_001'
     base_name = 'experiment_001(1-6)'
->>>>>>> wooyong8969-clean
 
     selected_labels = ['FP1','FP2','C3','C4','P7','P8','O1','O2',
                        'F7','F8','F3','F4','T7','T8','P3','P4']

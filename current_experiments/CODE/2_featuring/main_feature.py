@@ -10,19 +10,11 @@ import os
 import scipy.io as sio
 from joblib import dump, load
 
-<<<<<<< HEAD
 mat_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(3)_cleaned.mat'
 label_csv_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(3)_labels.csv'
 
 features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(3)_features.npy'
 labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(3)_labels.npy'
-=======
-mat_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-6)_test_cleaned.mat'
-label_csv_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-6)_test_labels.csv'
-
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-6)_test_cleaned.npy'
-labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-6)_test_labels.npy'
->>>>>>> wooyong8969-clean
 
 
 # ---------- 1. 전처리 된 데이터셋 불러오기 ---------- #

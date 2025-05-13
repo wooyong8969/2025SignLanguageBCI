@@ -25,6 +25,7 @@ class EEGDataset:
         fs = float(eeg_struct.srate)
         return eeg, fs
 
+
     def _load_labels(self, path):
         labels = pd.read_csv(path, header=None).iloc[:, 0].tolist()
         return labels

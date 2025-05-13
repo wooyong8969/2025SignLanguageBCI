@@ -7,16 +7,16 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.cm as cm
 
 # ---------- 경로 설정 ----------
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(7)_features.npy'
-true_label_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(7)_labels.csv'
-train_features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-6)_train_cleaned.npy'
-train_label_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-6)_train_labels.csv'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-6)_test_cleaned.npy'
+true_label_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-6)_test_labels.csv'
+train_features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-4)_train_cleaned.npy'
+train_label_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-4)_train_labels.csv'
 
-# ---------- 모델 및 변환기 로드 ----------
-clf = load('trained_model.joblib')
-pipeline = load('feature_selector.joblib')
-lda = load('lda_reducer.joblib')
-le = load('label_encoder.joblib')
+# 모델 및 변환기 로드
+clf = load(r'current_experiments\MODEL\trained_model.joblib')
+pipeline = load(r'current_experiments\MODEL\feature_selector.joblib')
+lda = load(r'current_experiments\MODEL\lda_reducer.joblib')
+le = load(r'current_experiments\MODEL\label_encoder.joblib')
 
 # ---------- 테스트 데이터 로드 및 처리 ----------
 features = np.load(features_path)

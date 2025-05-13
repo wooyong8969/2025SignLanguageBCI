@@ -6,8 +6,8 @@ import os
 
 # ---------- 1. 경로 설정 ---------- #
 data_path = "current_experiments/DATA/processed/experiment_001"
-mat_path = os.path.join(data_path, "experiment_001(1-4)_cleaned.mat")
-label_path = os.path.join(data_path, "experiment_001(1-4)_labels.csv")
+mat_path = os.path.join(data_path, "experiment_001(1-6)_cleaned.mat")
+label_path = os.path.join(data_path, "experiment_001(1-6)_labels.csv")
 
 # ---------- 2. 데이터 불러오기 (구조체 유지) ---------- #
 mat = sio.loadmat(mat_path)
@@ -30,13 +30,13 @@ X_train = np.transpose(X_train, (0, 2, 1))
 X_test = np.transpose(X_test, (0, 2, 1))
 
 # ---------- 4. 저장 ---------- #
-sio.savemat(os.path.join(data_path, "experiment_001(1-4)_train_cleaned.mat"), {
+sio.savemat(os.path.join(data_path, "experiment_001(1-6)_train_cleaned.mat"), {
     "EEG_clean": {
         "data": X_train.astype(np.float32),
         "srate": srate
     }
 })
-sio.savemat(os.path.join(data_path, "experiment_001(1-4)_test_cleaned.mat"), {
+sio.savemat(os.path.join(data_path, "experiment_001(1-6)_test_cleaned.mat"), {
     "EEG_clean": {
         "data": X_test.astype(np.float32),
         "srate": srate
@@ -44,10 +44,10 @@ sio.savemat(os.path.join(data_path, "experiment_001(1-4)_test_cleaned.mat"), {
 })
 
 pd.DataFrame(y_train).to_csv(
-    os.path.join(data_path, "experiment_001(1-4)_train_labels.csv"), index=False
+    os.path.join(data_path, "experiment_001(1-6)_train_labels.csv"), index=False
 )
 pd.DataFrame(y_test).to_csv(
-    os.path.join(data_path, "experiment_001(1-4)_test_labels.csv"), index=False
+    os.path.join(data_path, "experiment_001(1-6)_test_labels.csv"), index=False
 )
 
 print("구조체 유지한 EEG + 라벨 8:2 분할 저장 완료")

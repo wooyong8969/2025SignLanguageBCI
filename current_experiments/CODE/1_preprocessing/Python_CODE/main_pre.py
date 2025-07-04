@@ -127,26 +127,19 @@ class EEGPreprocessor:
 
 
 if __name__ == "__main__":
-<<<<<<< HEAD
-    csv_path = r'current_experiments\DATA\raw\experiment_001\SI_10_(7).csv'
-    epoch_table_path = r'current_experiments\DATA\video\experiment_001_10_epochs.xlsx'
+    csv_path = r'current_experiments\DATA\raw\experiment_001\SI_30(6-8).csv'
+    epoch_table_path = r'current_experiments\DATA\video\experiment_001_70_epochs.xlsx'
     save_dir = r'current_experiments\DATA\processed\experiment_001'
-    base_name = 'experiment_001(7)'
-=======
-    csv_path = r'current_experiments\DATA\raw\experiment_001\SI_30(1-6).csv'
-    epoch_table_path = r'current_experiments\DATA\video\experiment_001_180_epochs.xlsx'
-    save_dir = r'current_experiments\DATA\processed\experiment_001'
-    base_name = 'experiment_001(1-6)'
->>>>>>> d0c9d8683a1df4d212ad38741f72c74df401c460
+    base_name = 'experiment_001(6-8)'
 
     selected_labels = ['FP1','FP2','C3','C4','P7','P8','O1','O2',
                        'F7','F8','F3','F4','T7','T8','P3','P4']
     
     pre = EEGPreprocessor(csv_path, epoch_table_path, selected_labels)
-    pre.apply_zscore()
     pre.apply_bandpass()
     pre.apply_notch()
     pre.apply_ica()
     pre.apply_adjust()
     pre.rereference()
+    pre.apply_zscore()
     pre.save(save_dir, base_name)

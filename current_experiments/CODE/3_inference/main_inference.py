@@ -7,13 +7,13 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.cm as cm
 
 # ---------- 경로 설정 ----------
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-6)_test_cleaned.npy'
-true_label_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-6)_test_labels.csv'
-train_features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-4)_train_cleaned.npy'
-train_label_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-4)_train_labels.csv'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_cleaned.npy'
+true_label_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_labels.csv'
+train_features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_cleaned.npy'
+train_label_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_labels.csv'
 
 # 모델 및 변환기 로드
-clf = load(r'current_experiments\MODEL\trained_model.joblib')
+clf_lda = load(r'current_experiments\MODEL\trained_model_after_lda.joblib')
 pipeline = load(r'current_experiments\MODEL\feature_selector.joblib')
 lda = load(r'current_experiments\MODEL\lda_reducer.joblib')
 le = load(r'current_experiments\MODEL\label_encoder.joblib')
@@ -22,7 +22,7 @@ le = load(r'current_experiments\MODEL\label_encoder.joblib')
 features = np.load(features_path)
 selected = pipeline.transform(features)
 reduced = lda.transform(selected)
-pred = clf.predict(reduced)
+pred = clf_lda.predict(reduced)
 pred_labels = le.inverse_transform(pred)
 
 # ---------- 실제 라벨 로드 및 Break 제외 ----------

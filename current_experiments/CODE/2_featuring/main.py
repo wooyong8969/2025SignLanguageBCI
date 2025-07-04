@@ -1,4 +1,4 @@
-from eeg_dataset import EEGDataset
+from eeg_dataset_maker import EEGDataset
 from feature_extractor import DWTFeatureExtractor
 import numpy as np
 from sklearn.model_selection import train_test_split, cross_val_score
@@ -17,8 +17,8 @@ pipeline = Pipeline([
     ('scaler', StandardScaler()),
     ('feature_selection', SelectFromModel(LogisticRegression(penalty='l1', solver='liblinear', C=0.1))),
 ])
-features_path = r'current_experiments\DATA\processed\experiment_001_processed_features.npy'
-labels_path = r'current_experiments\DATA\processed\experiment_001_encoded_labels.npy'
+features_path = r'current_experiments\DATA\processed\experiment_002\experiment_002(1)_cleaned.npy'
+labels_path = r'current_experiments\DATA\processed\experiment_002\experiment_002(1)_labels.npy'
 
 
 # ---------- 1. 특징 load ---------- #

@@ -5,6 +5,8 @@ from sklearn.preprocessing import LabelEncoder
 from mne.decoding import CSP
 from pyriemann.estimation import Covariances
 from pyriemann.tangentspace import TangentSpace
+from joblib import dump, load
+
 
 class DWTFeatureExtractor:
     def __init__(self, fs=125, wavelet='coif5', level=5):
@@ -63,17 +65,26 @@ class DWTFeatureExtractor:
         std = np.std(x)
         return [energy, ent, std]
 
-    def extract_csp_features(self, eeg_data, labels, n_components=4):
+    def extract_csp_features(self, eeg_data, labels, n_components=4, save_path=r'current_experiments\MODEL\csp_filters.joblib'):
         eeg_data = eeg_data.astype(np.float64)
         le = LabelEncoder()
         y = le.fit_transform(labels)
         classes = np.unique(y)
 
         csp_features = []
-        for c in classes:
-            y_binary = (y == c).astype(int)
-            csp = CSP(n_components=n_components, log=True)
-            X_csp = csp.fit_transform(eeg_data, y_binary)
+
+        # csp_filters = []
+        # for c in classes:
+        #     y_binary = (y == c).astype(int)
+        #     csp = CSP(n_components=n_components, log=True, reg=0.01)
+        #     X_csp = csp.fit_transform(eeg_data, y_binary)
+        #     csp_features.append(X_csp)
+        #     csp_filters.append(csp)
+        # dump(csp_filters, save_path)
+
+        csp_filters = load(save_path)
+        for csp in csp_filters:
+            X_csp = csp.transform(eeg_data)
             csp_features.append(X_csp)
 
         return np.concatenate(csp_features, axis=1)

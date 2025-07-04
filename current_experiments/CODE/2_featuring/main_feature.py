@@ -10,11 +10,11 @@ import os
 import scipy.io as sio
 from joblib import dump, load
 
-mat_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(7)_cleaned.mat'
-label_csv_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(7)_labels.csv'
+mat_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_cleaned.mat'
+label_csv_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_labels.csv'
 
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(7)_features.npy'
-labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(7)_labels.npy'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_cleaned.npy'
+labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_labels.npy'
 
 
 # ---------- 1. 전처리 된 데이터셋 불러오기 ---------- #
@@ -25,6 +25,7 @@ dataset.remove_break()
 eeg, labels, fs = dataset.get_data()
 #le = LabelEncoder()
 le = load(r'current_experiments\MODEL\label_encoder.joblib')
+csp = r'current_experiments\MODEL\csp_filters.joblib'
 encoded_labels = le.fit_transform(labels)
 
 
@@ -35,7 +36,6 @@ aug_eeg, aug_labels = augmenter.augment(eeg, encoded_labels, num_augments=1)
 
 print("증강 후 데이터 shape:", aug_eeg.shape)
 print("증강 후 라벨 수:", len(aug_labels))
-
 
 # ---------- 2. 특징 추출하기 ---------- #
 
@@ -48,7 +48,7 @@ else:
 
     flat_time = extractor.flatten_feature_dict(time_features, extractor.bands)
     flat_freq = extractor.flatten_feature_dict(freq_features, extractor.bands)
-    csp_features = extractor.extract_csp_features(aug_eeg, aug_labels, n_components=4)
+    csp_features = extractor.extract_csp_features(aug_eeg, aug_labels, n_components=4, save_path=csp)
     riemannian_features = extractor.extract_riemannian_features(aug_eeg)
 
     features = np.concatenate([flat_time, flat_freq, csp_features, riemannian_features], axis=1)
@@ -60,6 +60,6 @@ else:
 
     print(features.shape)
 
-# dump(le, 'label_encoder.joblib')
+# dump(le, r'current_experiments\MODEL\label_encoder.joblib')
 
 

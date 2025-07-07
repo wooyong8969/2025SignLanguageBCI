@@ -15,12 +15,12 @@ from mpl_toolkits.mplot3d import Axes3D
 
 # ---------- 1. 파일 경로 ---------- #
 
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_cleaned.npy'
-labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_labels.npy'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_cleaned.npy'
+labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_labels.npy'
 
 # clf_lda = load(r'current_experiments\MODEL\trained_model_after_lda.joblib')
-pipeline = load(r'current_experiments\MODEL\feature_selector.joblib')
-lda = load(r'current_experiments\MODEL\lda_reducer.joblib')
+# pipeline = load(r'current_experiments\MODEL\feature_selector.joblib')
+# lda = load(r'current_experiments\MODEL\lda_reducer.joblib')
 
 # ---------- 2. 특징 load ---------- #
 if os.path.exists(features_path) and os.path.exists(labels_path):
@@ -42,20 +42,20 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # ---------- 4. 특징 선택 (L1 기반) ---------- #
-# pipeline = Pipeline([
-#     ('scaler', StandardScaler()),
-#     ('feature_selection', SelectFromModel(LogisticRegression(penalty='l1', solver='liblinear', C=0.1)))
-# ])
+pipeline = Pipeline([
+    ('scaler', StandardScaler()),
+    ('feature_selection', SelectFromModel(LogisticRegression(penalty='l1', solver='liblinear', C=0.1)))
+])
 
 X_train_sel = pipeline.fit_transform(X_train, y_train)
+# X_train_sel = pipeline.transform(X_train)
 X_test_sel = pipeline.transform(X_test)
 
 # ---------- 5. LDA 차원 축소 ---------- #
-# lda = LinearDiscriminantAnalysis()
+lda = LinearDiscriminantAnalysis()
 X_train_lda = lda.fit_transform(X_train_sel, y_train)
+# X_train_lda = lda.transform(X_train_sel)
 X_test_lda = lda.transform(X_test_sel)
-
-np.save('6_8_lda.npy', X_test_lda)
 
 print("LDA 적용 후 train feature shape:", X_train_lda.shape)
 
@@ -93,5 +93,9 @@ plt.show()
 
 # ---------- 9. 모델 저장 ---------- #
 dump(clf_lda, r'current_experiments\MODEL\trained_model_after_lda.joblib')
-# dump(pipeline, r'current_experiments\MODEL\feature_selector.joblib')
-# dump(lda, r'current_experiments\MODEL\lda_reducer.joblib')
+dump(pipeline, r'current_experiments\MODEL\feature_selector.joblib')
+dump(lda, r'current_experiments\MODEL\lda_reducer.joblib')
+
+np.save('1_5_features.npy', features)
+np.save('1_5_X_train_sel.npy', X_train_sel)
+np.save('1_5_X_train_lda.npy', X_train_lda)

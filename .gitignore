@@ -1,6 +1,7 @@
 /VENV
 /archive/Data/
-/current_experiments/DATA
+/current_experiments/DATA/processed/experiment_001_
+/current_experiments/DATA/raw
 __pycache__/
 *.pyc
 

@@ -1,18 +1,17 @@
 from joblib import load
 import numpy as np
-import pandas as pd
-from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score, confusion_matrix, ConfusionMatrixDisplay
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.cm as cm
 
 # ---------- 경로 설정 ----------
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_cleaned.npy'
-true_label_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_labels.csv'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-8)_cleaned.npy'
+true_label_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-8)_labels.npy'
 train_features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_cleaned.npy'
-train_label_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_labels.csv'
+train_label_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_labels.npy'
 
-# 모델 및 변환기 로드
+# ---------- 모델 및 변환기 로드 ----------
 clf_lda = load(r'current_experiments\MODEL\trained_model_after_lda.joblib')
 pipeline = load(r'current_experiments\MODEL\feature_selector.joblib')
 lda = load(r'current_experiments\MODEL\lda_reducer.joblib')
@@ -20,23 +19,20 @@ le = load(r'current_experiments\MODEL\label_encoder.joblib')
 
 # ---------- 테스트 데이터 로드 및 처리 ----------
 features = np.load(features_path)
-# features = features[150*4:]
+features = features[150*4:]
 selected = pipeline.transform(features)
 reduced = lda.transform(selected)
 pred = clf_lda.predict(reduced)
-pred_labels = le.inverse_transform(pred)
 
-# ---------- 실제 라벨 로드 및 Break 제외 ----------
-df = pd.read_csv(true_label_path, header=None)
-true_labels_full = df.iloc[:, 0].astype(str).tolist()
-true_labels = [lbl for lbl in true_labels_full if lbl != 'Break']
-# true_labels = true_labels[150*4:]
+# ---------- 실제 라벨 npy 로드 ----------
+true_labels = np.load(true_label_path)
+true_labels = true_labels[150*4:]
+true_encoded = true_labels  # 이미 인코딩되어 있으므로 그대로 사용
 
 # ---------- 라벨 수 확인 ----------
 assert len(true_labels) == len(pred), f"예측 수({len(pred)})와 라벨 수({len(true_labels)})가 다릅니다!"
 
 # ---------- 평가 ----------
-true_encoded = le.transform(true_labels)
 accuracy = accuracy_score(true_encoded, pred)
 print(f"정확도: {accuracy:.04f}%")
 
@@ -50,10 +46,8 @@ plt.show()
 
 # ---------- 훈련 데이터 로드 ----------
 train_features = np.load(train_features_path)
-train_label_df = pd.read_csv(train_label_path, header=None)
-train_labels_full = train_label_df.iloc[:, 0].astype(str).tolist()
-train_labels = [lbl for lbl in train_labels_full if lbl != 'Break']
-train_encoded = le.transform(train_labels)
+train_labels = np.load(train_label_path)
+train_encoded = train_labels
 
 # ---------- 훈련 데이터 변환 ----------
 train_selected = pipeline.transform(train_features)
@@ -83,13 +77,10 @@ for idx, class_idx in enumerate(unique_classes):
                label=f'Test - {le.inverse_transform([class_idx])[0]}',
                marker='^', edgecolor='k', linewidth=0.3)
 
-# ---------- 축 설정 ----------
 ax.set_xlabel('LDA 1')
 ax.set_ylabel('LDA 2')
 ax.set_zlabel('LDA 3')
 ax.set_title('3D LDA Projection (Train vs Test)')
-
-# ---------- 범례 설정 ----------
 ax.legend(loc='upper left', bbox_to_anchor=(1.15, 1), fontsize=9)
 plt.tight_layout()
 plt.show()

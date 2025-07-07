@@ -78,32 +78,32 @@ class EEGPreprocessor:
         data = notch_filter(data, Fs=self.sfreq, freqs=[freq], notch_widths=1.0, verbose=True)
         self.epochs._data = data
 
-    def apply_ica(self):
-        self.ica = mne.preprocessing.ICA(n_components=15, random_state=97, max_iter='auto')  # ← 고정값 추천
-        self.ica.fit(self.epochs)
-        self.ica.get_sources(self.epochs).get_data()
+    # def apply_ica(self):
+    #     self.ica = mne.preprocessing.ICA(n_components=15, random_state=97, max_iter='auto')  # ← 고정값 추천
+    #     self.ica.fit(self.epochs)
+    #     self.ica.get_sources(self.epochs).get_data()
 
-    def apply_adjust(self):
-        sources = self.ica.get_sources(self.epochs)
-        sources_data = sources.get_data(copy=True)
-        sources_data = np.transpose(sources_data, (1, 2, 0))
+    # def apply_adjust(self):
+    #     sources = self.ica.get_sources(self.epochs)
+    #     sources_data = sources.get_data(copy=True)
+    #     sources_data = np.transpose(sources_data, (1, 2, 0))
 
-        mix_mat = self.ica.mixing_matrix_
-        n_rows = mix_mat.shape[0]
-        for k in self.brain_areas:
-            self.brain_areas[k] = self.brain_areas[k][self.brain_areas[k] < n_rows]
+    #     mix_mat = self.ica.mixing_matrix_
+    #     n_rows = mix_mat.shape[0]
+    #     for k in self.brain_areas:
+    #         self.brain_areas[k] = self.brain_areas[k][self.brain_areas[k] < n_rows]
 
-        blink, vert, horz, disc = art_comp(sources_data, mix_mat, self.brain_areas, self.ch_dist)
-        to_remove = np.where(blink | vert | horz | disc)[0]
-        print("Removing components:", to_remove)
-        self.ica.exclude = list(to_remove)
-        self.epochs = self.ica.apply(self.epochs.copy())
+    #     blink, vert, horz, disc = art_comp(sources_data, mix_mat, self.brain_areas, self.ch_dist)
+    #     to_remove = np.where(blink | vert | horz | disc)[0]
+    #     print("Removing components:", to_remove)
+    #     self.ica.exclude = list(to_remove)
+    #     self.epochs = self.ica.apply(self.epochs.copy())
 
-    def apply_zscore(self):
-        data = self.epochs.get_data()
-        mean = np.mean(data, axis=2, keepdims=True)
-        std = np.std(data, axis=2, keepdims=True) + 1e-8
-        self.epochs._data = (data - mean) / std
+    # def apply_zscore(self):
+    #     data = self.epochs.get_data()
+    #     mean = np.mean(data, axis=2, keepdims=True)
+    #     std = np.std(data, axis=2, keepdims=True) + 1e-8
+    #     self.epochs._data = (data - mean) / std
 
     def rereference(self):
         self.epochs = self.epochs.copy().set_eeg_reference('average', projection=False)
@@ -136,10 +136,10 @@ if __name__ == "__main__":
                        'F7','F8','F3','F4','T7','T8','P3','P4']
     
     pre = EEGPreprocessor(csv_path, epoch_table_path, selected_labels)
+    pre.rereference()
     pre.apply_bandpass()
     pre.apply_notch()
-    pre.apply_ica()
-    pre.apply_adjust()
-    pre.rereference()
-    pre.apply_zscore()
+    # pre.apply_ica()
+    # pre.apply_adjust()
+    # pre.apply_zscore()
     pre.save(save_dir, base_name)

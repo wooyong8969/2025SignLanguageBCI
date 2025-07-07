@@ -15,10 +15,10 @@ from mpl_toolkits.mplot3d import Axes3D
 
 # ---------- 1. 파일 경로 ---------- #
 
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_cleaned.npy'
-labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_labels.npy'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_cleaned.npy'
+labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_labels.npy'
 
-clf_lda = load(r'current_experiments\MODEL\trained_model_after_lda.joblib')
+# clf_lda = load(r'current_experiments\MODEL\trained_model_after_lda.joblib')
 pipeline = load(r'current_experiments\MODEL\feature_selector.joblib')
 lda = load(r'current_experiments\MODEL\lda_reducer.joblib')
 
@@ -32,6 +32,9 @@ else:
 
 print("기존 feature shape:", features.shape)
 print("클래스 분포:", Counter(encoded_labels))
+
+# features = features[:150*4]
+# encoded_labels = encoded_labels[:150*4]
 
 # ---------- 3. Train/Test 분리 ---------- #
 X_train, X_test, y_train, y_test = train_test_split(
@@ -52,10 +55,12 @@ X_test_sel = pipeline.transform(X_test)
 X_train_lda = lda.fit_transform(X_train_sel, y_train)
 X_test_lda = lda.transform(X_test_sel)
 
+np.save('6_8_lda.npy', X_test_lda)
+
 print("LDA 적용 후 train feature shape:", X_train_lda.shape)
 
 # ---------- 6. 모델 학습 ---------- #
-# clf_lda = SVC(kernel='rbf', C=1, gamma='scale')
+clf_lda = SVC(kernel='rbf', C=1, gamma='scale')
 clf_lda.fit(X_train_lda, y_train)
 
 # ---------- 7. 평가 ---------- #
@@ -87,6 +92,6 @@ plt.tight_layout()
 plt.show()
 
 # ---------- 9. 모델 저장 ---------- #
-# dump(clf_lda, r'current_experiments\MODEL\trained_model_after_lda.joblib')
+dump(clf_lda, r'current_experiments\MODEL\trained_model_after_lda.joblib')
 # dump(pipeline, r'current_experiments\MODEL\feature_selector.joblib')
 # dump(lda, r'current_experiments\MODEL\lda_reducer.joblib')

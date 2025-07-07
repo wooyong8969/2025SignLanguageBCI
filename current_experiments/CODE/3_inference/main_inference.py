@@ -20,6 +20,7 @@ le = load(r'current_experiments\MODEL\label_encoder.joblib')
 
 # ---------- 테스트 데이터 로드 및 처리 ----------
 features = np.load(features_path)
+# features = features[150*4:]
 selected = pipeline.transform(features)
 reduced = lda.transform(selected)
 pred = clf_lda.predict(reduced)
@@ -29,6 +30,7 @@ pred_labels = le.inverse_transform(pred)
 df = pd.read_csv(true_label_path, header=None)
 true_labels_full = df.iloc[:, 0].astype(str).tolist()
 true_labels = [lbl for lbl in true_labels_full if lbl != 'Break']
+# true_labels = true_labels[150*4:]
 
 # ---------- 라벨 수 확인 ----------
 assert len(true_labels) == len(pred), f"예측 수({len(pred)})와 라벨 수({len(true_labels)})가 다릅니다!"

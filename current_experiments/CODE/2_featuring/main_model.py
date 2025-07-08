@@ -15,7 +15,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 # ---------- 1. 파일 경로 ---------- #
 
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_cleaned.npy'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_cleaned_8.npy'
 labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_labels.npy'
 
 # clf_lda = load(r'current_experiments\MODEL\trained_model_after_lda.joblib')
@@ -96,6 +96,6 @@ dump(clf_lda, r'current_experiments\MODEL\trained_model_after_lda.joblib')
 dump(pipeline, r'current_experiments\MODEL\feature_selector.joblib')
 dump(lda, r'current_experiments\MODEL\lda_reducer.joblib')
 
-np.save('1_5_features.npy', features)
-np.save('1_5_X_train_sel.npy', X_train_sel)
-np.save('1_5_X_train_lda.npy', X_train_lda)
+# np.save('1_5_features.npy', features)
+# np.save('1_5_X_train_sel.npy', X_train_sel)
+# np.save('1_5_X_train_lda.npy', X_train_lda)

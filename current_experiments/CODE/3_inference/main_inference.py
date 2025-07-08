@@ -6,8 +6,8 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.cm as cm
 
 # ---------- 경로 설정 ----------
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-8)_cleaned.npy'
-true_label_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-8)_labels.npy'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_cleaned.npy'
+true_label_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_labels.npy'
 train_features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_cleaned.npy'
 train_label_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_labels.npy'
 
@@ -19,22 +19,22 @@ le = load(r'current_experiments\MODEL\label_encoder.joblib')
 
 # ---------- 테스트 데이터 로드 및 처리 ----------
 features = np.load(features_path)
-features = features[150*4:]
+# features = features[150*4:]
 selected = pipeline.transform(features)
 reduced = lda.transform(selected)
 pred = clf_lda.predict(reduced)
 
 # ---------- 실제 라벨 npy 로드 ----------
 true_labels = np.load(true_label_path)
-true_labels = true_labels[150*4:]
-true_encoded = true_labels  # 이미 인코딩되어 있으므로 그대로 사용
+# true_labels = true_labels[150*4:]
+true_encoded = true_labels
 
 # ---------- 라벨 수 확인 ----------
 assert len(true_labels) == len(pred), f"예측 수({len(pred)})와 라벨 수({len(true_labels)})가 다릅니다!"
 
 # ---------- 평가 ----------
 accuracy = accuracy_score(true_encoded, pred)
-print(f"정확도: {accuracy:.04f}%")
+print(f"검증 정확도: {accuracy:.04f}%")
 
 # ---------- 혼동 행렬 ----------
 cmt = confusion_matrix(true_encoded, pred)

@@ -7,8 +7,8 @@ import seaborn as sns
 from joblib import dump
 
 # 1. 특징 및 라벨 로드
-features_path = r'experiment_001(1-4)_train_8d_features.npy'
-label_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-4)_train_labels.npy'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_cleaned_8.npy'
+label_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_labels.npy'
 
 features = np.load(features_path)
 labels = np.load(label_path)

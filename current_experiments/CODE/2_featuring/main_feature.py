@@ -51,16 +51,16 @@ else:
     csp_features = extractor.extract_csp_features(aug_eeg, aug_labels, n_components=4, save_path=csp)
     # riemannian_features = extractor.extract_riemannian_features(aug_eeg)
 
-    features = np.concatenate([flat_time, flat_freq, csp_features], axis=1)
+    features = np.concatenate([csp_features], axis=1)
     n_epochs = aug_eeg.shape[0]
     features = features.reshape(n_epochs, -1)
 
     np.save(features_path, features)
     np.save(labels_path, aug_labels)
 
-    np.save('6_8_dwt_time.npy', flat_time)
-    np.save('6_8_dwt_freq.npy', flat_freq)
-    np.save('6_8_csp.npy', csp_features)
+    # np.save('6_8_dwt_time.npy', flat_time)
+    # np.save('6_8_dwt_freq.npy', flat_freq)
+    # np.save('6_8_csp.npy', csp_features)
     # np.save('1_5_riemann.npy', riemannian_features)
 
     print(features.shape)

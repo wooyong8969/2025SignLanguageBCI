@@ -9,7 +9,7 @@ import scipy.io as sio
 
 
 class EEGPreprocessor:
-    def __init__(self, csv_path, epoch_path, ch_names, sfreq=125, cut_time=0):
+    def __init__(self, csv_path, epoch_path, ch_names, sfreq=125, cut_time=10):
         self.ch_names = ch_names
         self.sfreq = sfreq
         self.cut_time = cut_time

@@ -5,8 +5,8 @@ from siamese_model import SiameseNetwork, ContrastiveLoss
 import random
 
 
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-4)_test_cleaned.npy'
-labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-4)_test_labels.npy'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_cleaned.npy'
+labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_labels.npy'
 
 features = np.load(features_path)
 labels = np.load(labels_path)
@@ -54,4 +54,4 @@ model.eval()
 with torch.no_grad():
     reduced_features = model(torch.tensor(features, dtype=torch.float32)).numpy()
 
-np.save("experiment_001(1-4)_test_8d_features.npy", reduced_features)
+np.save(r"current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_cleaned_8.npy", reduced_features)

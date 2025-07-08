@@ -10,11 +10,11 @@ import os
 import scipy.io as sio
 from joblib import dump, load
 
-mat_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-3)_cleaned.mat'
-label_csv_path = r'D:\W00Y0NG\PRGM2\2025BCI\current_experiments\DATA\processed\experiment_001\experiment_001(1-3)_labels.csv'
+mat_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_cleaned.mat'
+label_csv_path = r'D:\W00Y0NG\PRGM2\2025BCI\current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_labels.csv'
 
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-3)_multiCSP_augmented5_features.npy'
-labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-3)_multiCSP_augmented5_labels.npy'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_multiCSP_augmented5_features.npy'
+labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_multiCSP_augmented5_labels.npy'
 
 
 # ---------- 1. 전처리 된 데이터셋 불러오기 ---------- #
@@ -51,7 +51,7 @@ else:
     csp_features = extractor.extract_multiclass_csp_features(aug_eeg, aug_labels, n_components=6)
     riemannian_features = extractor.extract_riemannian_features(aug_eeg)
 
-    features = np.concatenate([flat_time, flat_freq, csp_features], axis=1)
+    features = np.concatenate([csp_features], axis=1)
     n_epochs = aug_eeg.shape[0]
     features = features.reshape(n_epochs, -1)
 

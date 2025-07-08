@@ -15,7 +15,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 # ---------- 1. 파일 경로 ---------- #
 
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_cleaned_8.npy'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_cleaned.npy'
 labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_labels.npy'
 
 # clf_lda = load(r'current_experiments\MODEL\trained_model_after_lda.joblib')
@@ -41,15 +41,20 @@ X_train, X_test, y_train, y_test = train_test_split(
     features, encoded_labels, test_size=0.2, stratify=encoded_labels, random_state=42
 )
 
+print("Train 클래스 분포:", Counter(y_train))
+print("Test 클래스 분포:", Counter(y_test))
+
 # ---------- 4. 특징 선택 (L1 기반) ---------- #
 pipeline = Pipeline([
-    ('scaler', StandardScaler()),
-    ('feature_selection', SelectFromModel(LogisticRegression(penalty='l1', solver='liblinear', C=0.1)))
+    ('scaler', StandardScaler())
+    # ('feature_selection', SelectFromModel(LogisticRegression(penalty='l1', solver='liblinear', C=0.1)))
 ])
 
 X_train_sel = pipeline.fit_transform(X_train, y_train)
 # X_train_sel = pipeline.transform(X_train)
 X_test_sel = pipeline.transform(X_test)
+
+print("pipeline 적용 후 train feature shape:", X_train_sel.shape)
 
 # ---------- 5. LDA 차원 축소 ---------- #
 lda = LinearDiscriminantAnalysis()

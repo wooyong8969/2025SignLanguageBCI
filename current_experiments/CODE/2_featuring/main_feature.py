@@ -39,31 +39,28 @@ print("증강 후 라벨 수:", len(aug_labels))
 
 # ---------- 2. 특징 추출하기 ---------- #
 
-if os.path.exists(features_path) and os.path.exists(labels_path):
-    print("이미 파일이 저장되어 있습니다.")
-else:
-    print("특징 추출 중...")
-    extractor = DWTFeatureExtractor(wavelet='coif1', level=5)
-    time_features, freq_features = extractor.extract(aug_eeg)
+print("특징 추출 중...")
+extractor = DWTFeatureExtractor(wavelet='coif1', level=5)
+time_features, freq_features = extractor.extract(aug_eeg)
 
-    flat_time = extractor.flatten_feature_dict(time_features, extractor.bands)
-    flat_freq = extractor.flatten_feature_dict(freq_features, extractor.bands)
-    csp_features = extractor.extract_csp_features(aug_eeg, aug_labels, n_components=4, save_path=csp)
-    # riemannian_features = extractor.extract_riemannian_features(aug_eeg)
+flat_time = extractor.flatten_feature_dict(time_features, extractor.bands)
+flat_freq = extractor.flatten_feature_dict(freq_features, extractor.bands)
+csp_features = extractor.extract_csp_features(aug_eeg, aug_labels, n_components=4, save_path=csp)
+riemannian_features = extractor.extract_riemannian_features(aug_eeg)
 
-    features = np.concatenate([csp_features], axis=1)
-    n_epochs = aug_eeg.shape[0]
-    features = features.reshape(n_epochs, -1)
+features = np.concatenate([csp_features], axis=1)
+n_epochs = aug_eeg.shape[0]
+features = features.reshape(n_epochs, -1)
 
-    np.save(features_path, features)
-    np.save(labels_path, aug_labels)
+np.save(features_path, features)
+np.save(labels_path, aug_labels)
 
-    # np.save('6_8_dwt_time.npy', flat_time)
-    # np.save('6_8_dwt_freq.npy', flat_freq)
-    # np.save('6_8_csp.npy', csp_features)
-    # np.save('1_5_riemann.npy', riemannian_features)
+# np.save('6_8_dwt_time.npy', flat_time)
+# np.save('6_8_dwt_freq.npy', flat_freq)
+# np.save('6_8_csp.npy', csp_features)
+# np.save('1_5_riemann.npy', riemannian_features)
 
-    print(features.shape)
+print(features.shape)
 
 
 # dump(le, r'current_experiments\MODEL\label_encoder.joblib')

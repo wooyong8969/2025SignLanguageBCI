@@ -46,8 +46,8 @@ print("Test 클래스 분포:", Counter(y_test))
 
 # ---------- 4. 특징 선택 (L1 기반) ---------- #
 pipeline = Pipeline([
-    ('scaler', StandardScaler())
-    # ('feature_selection', SelectFromModel(LogisticRegression(penalty='l1', solver='liblinear', C=0.1)))
+    ('scaler', StandardScaler()),
+    ('feature_selection', SelectFromModel(LogisticRegression(penalty='l2', solver='liblinear', C=0.1)))
 ])
 
 X_train_sel = pipeline.fit_transform(X_train, y_train)

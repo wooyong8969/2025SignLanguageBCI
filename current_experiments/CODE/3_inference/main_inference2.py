@@ -35,7 +35,6 @@ try:
     disp = ConfusionMatrixDisplay.from_estimator(clf_svm_rbf, features_pca, true_encoded, display_labels=le.classes_)
 except Exception:
     disp = ConfusionMatrixDisplay.from_estimator(clf_svm_rbf, features_pca, true_encoded)
-disp.plot(cmap='Blues', xticks_rotation=45)
 plt.title("Confusion Matrix")
 plt.tight_layout()
 plt.show()

@@ -15,8 +15,11 @@ from mpl_toolkits.mplot3d import Axes3D
 
 # ---------- 1. 파일 경로 ---------- #
 
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_cleaned.npy'
-labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-5)_labels.npy'
+# features_path = r'current_experiments\DATA\open\BCI competition IV\experiment_iv_cleaned.npy'
+# labels_path = r'current_experiments\DATA\open\BCI competition IV\experiment_iv_labels.npy'
+
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-8)_cleaned.npy'
+labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-8)_labels.npy'
 
 # clf_lda = load(r'current_experiments\MODEL\trained_model_after_lda.joblib')
 # pipeline = load(r'current_experiments\MODEL\feature_selector.joblib')
@@ -47,7 +50,7 @@ print("Test 클래스 분포:", Counter(y_test))
 # ---------- 4. 특징 선택 (L1 기반) ---------- #
 pipeline = Pipeline([
     ('scaler', StandardScaler()),
-    ('feature_selection', SelectFromModel(LogisticRegression(penalty='l2', solver='liblinear', C=0.1)))
+    ('feature_selection', SelectFromModel(LogisticRegression(penalty='l1', solver='liblinear', C=10)))
 ])
 
 X_train_sel = pipeline.fit_transform(X_train, y_train)
@@ -87,7 +90,9 @@ ax = fig.add_subplot(111, projection='3d')
 for label in np.unique(y_train):
     idx = y_train == label
     ax.scatter(X_train_lda[idx, 0], X_train_lda[idx, 1], X_train_lda[idx, 2],
-                label=f"Class {label}", alpha=0.3)
+                label=f"Class {label}", alpha=0.3, marker='o')
+    ax.scatter(X_test_lda[idx, 0], X_test_lda[idx, 1], X_test_lda[idx, 2],
+                label=f"Class {label}", alpha=0.3, marker='^')
 ax.set_title("LDA Projection (3D)")
 ax.set_xlabel("LD1")
 ax.set_ylabel("LD2")

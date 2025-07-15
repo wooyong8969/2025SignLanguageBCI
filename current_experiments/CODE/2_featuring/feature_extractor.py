@@ -73,19 +73,19 @@ class DWTFeatureExtractor:
 
         csp_features = []
 
-        # csp_filters = []
-        # for c in classes:
-        #     y_binary = (y == c).astype(int)
-        #     csp = CSP(n_components=n_components, log=True, reg=0.01)
-        #     X_csp = csp.fit_transform(eeg_data, y_binary)
-        #     csp_features.append(X_csp)
-        #     csp_filters.append(csp)
-        # dump(csp_filters, save_path)
-
-        csp_filters = load(save_path)
-        for csp in csp_filters:
-            X_csp = csp.transform(eeg_data)
+        csp_filters = []
+        for c in classes:
+            y_binary = (y == c).astype(int)
+            csp = CSP(n_components=n_components, log=True, reg=0.01)
+            X_csp = csp.fit_transform(eeg_data, y_binary)
             csp_features.append(X_csp)
+            csp_filters.append(csp)
+        dump(csp_filters, save_path)
+
+        # csp_filters = load(save_path)
+        # for csp in csp_filters:
+        #     X_csp = csp.transform(eeg_data)
+        #     csp_features.append(X_csp)
 
         return np.concatenate(csp_features, axis=1)
     

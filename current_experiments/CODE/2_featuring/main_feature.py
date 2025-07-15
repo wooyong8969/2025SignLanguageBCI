@@ -10,11 +10,11 @@ import os
 import scipy.io as sio
 from joblib import dump, load
 
-mat_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_cleaned.mat'
-label_csv_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_labels.csv'
+mat_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-8)_cleaned.mat'
+label_csv_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-8)_labels.csv'
 
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_cleaned.npy'
-labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_labels.npy'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-8)_cleaned.npy'
+labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-8)_labels.npy'
 
 
 # ---------- 1. 전처리 된 데이터셋 불러오기 ---------- #
@@ -25,7 +25,7 @@ dataset.remove_break()
 eeg, labels, fs = dataset.get_data()
 #le = LabelEncoder()
 le = load(r'current_experiments\MODEL\label_encoder.joblib')
-csp = r'current_experiments\MODEL\csp_filters.joblib'
+csp = r'current_experiments\MODEL\csp_filters_IV.joblib'
 encoded_labels = le.fit_transform(labels)
 
 
@@ -43,10 +43,10 @@ print("특징 추출 중...")
 extractor = DWTFeatureExtractor(wavelet='coif1', level=5)
 time_features, freq_features = extractor.extract(aug_eeg)
 
-flat_time = extractor.flatten_feature_dict(time_features, extractor.bands)
-flat_freq = extractor.flatten_feature_dict(freq_features, extractor.bands)
+# flat_time = extractor.flatten_feature_dict(time_features, extractor.bands)
+# flat_freq = extractor.flatten_feature_dict(freq_features, extractor.bands)
 csp_features = extractor.extract_csp_features(aug_eeg, aug_labels, n_components=4, save_path=csp)
-riemannian_features = extractor.extract_riemannian_features(aug_eeg)
+# riemannian_features = extractor.extract_riemannian_features(aug_eeg)
 
 features = np.concatenate([csp_features], axis=1)
 n_epochs = aug_eeg.shape[0]

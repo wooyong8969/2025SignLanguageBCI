@@ -18,7 +18,7 @@ def preprocess_gdf_EEGNet_smr(gdf_path, resample_rate=128):
 
     # 필터링
     raw.notch_filter(freqs=50)
-    raw.filter(4., 40., fir_design='firwin')
+    raw.filter(0.5, 40., fir_design='firwin')
 
     # 리샘플링
     raw.resample(resample_rate)
@@ -63,8 +63,8 @@ if __name__ == "__main__":
     gdf_path = r"current_experiments\DATA\open\BCI competition IV\A01T.gdf"
     X, y = preprocess_gdf_EEGNet_smr(gdf_path)
 
-    print(f"\n✅ X shape: {X.shape}")
-    print(f"✅ y shape: {y.shape}")
+    print(f"\nX shape: {X.shape}")
+    print(f"y shape: {y.shape}")
     print(f"X value range: min={X.min():.10f}, max={X.max():.10f}, mean={X.mean():.10f}, std={X.std():.10f}")
     print(f"전체 클래스 분포: {Counter(y)}")
 

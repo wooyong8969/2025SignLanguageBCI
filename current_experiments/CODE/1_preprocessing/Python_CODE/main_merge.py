@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 base_dir = r'current_experiments\DATA\processed\experiment_001'
-sessions = [1, 2, 3, 4, 5, 6, 7, 8]
+sessions = [6, 7, 8]
 mat_files = [os.path.join(base_dir, f'experiment_001({sid})_cleaned.mat') for sid in sessions]
 label_files = [os.path.join(base_dir, f'experiment_001({sid})_labels.csv') for sid in sessions]
 
@@ -27,12 +27,12 @@ concat_labels = np.array(all_labels)
 print("EEG shape:", concat_eeg.shape)
 print("Label shape:", concat_labels.shape)
 
-sio.savemat(os.path.join(base_dir, 'experiment_001(1-8)_cleaned.mat'), {
+sio.savemat(os.path.join(base_dir, 'experiment_001(6-8)_cleaned.mat'), {
     'EEG_clean': {
         'data': concat_eeg.astype(np.float32),
         'srate': np.array([[125.0]])
     }
 })
-with open(os.path.join(base_dir, 'experiment_001(1-8)_labels.csv'), 'w', encoding='utf-8') as f:
+with open(os.path.join(base_dir, 'experiment_001(6-8)_labels.csv'), 'w', encoding='utf-8') as f:
     for label in concat_labels:
         f.write(f"{label}\n")

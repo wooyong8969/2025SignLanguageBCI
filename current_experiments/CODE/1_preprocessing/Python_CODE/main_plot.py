@@ -127,6 +127,8 @@ class EEGPreprocessor:
             print(f".mat 파일 저장 완료 → {base_name}_cleaned.mat")
 
 def plot_epochs_data(epochs, title, epoch_idx=1, ch_idxs=None):
+
+    
     """
     epochs: mne.Epochs 또는 np.ndarray (n_epochs, n_channels, n_times)
     epoch_idx: plot할 epoch index
@@ -138,14 +140,14 @@ def plot_epochs_data(epochs, title, epoch_idx=1, ch_idxs=None):
     else:
         data = epochs[epoch_idx]
         ch_names = [f'Ch{i+1}' for i in range(data.shape[0])]
-
+    print(data)
     times = np.arange(data.shape[1]) / 125  # sfreq=125Hz 기준, 수정 가능
 
     if ch_idxs is None:
         ch_idxs = range(min(16, data.shape[0]))  # 기본: 앞 8채널
 
     plt.figure(figsize=(12, 5))
-    offset = 100
+    offset = 0
     # plt.plot(times, data[5, :] + 0 * offset, label=ch_names[5])
     for i, ch in enumerate(ch_idxs):
         plt.plot(times, data[ch, :] + i * offset, label=ch_names[ch])
@@ -155,9 +157,6 @@ def plot_epochs_data(epochs, title, epoch_idx=1, ch_idxs=None):
     plt.show()
 
 def plot_long_concat(epochs, ch_idxs=None):
-    """
-    모든 epoch를 시간 순서대로 이어붙여 전체 신호 시계열 plot (각 채널별).
-    """
     data = epochs.get_data()  # (n_epochs, n_channels, n_times)
     n_epochs, n_channels, n_times = data.shape
     # (n_epochs, n_channels, n_times) -> (n_channels, n_epochs * n_times)
@@ -168,7 +167,7 @@ def plot_long_concat(epochs, ch_idxs=None):
     plt.figure(figsize=(14, 6))
     for ch in ch_idxs:
         plt.plot(times, data_concat[ch, :], label=epochs.info['ch_names'][ch])
-    plt.title("All epochs concatenated (channels as rows)")
+    plt.title("all")
     plt.xlabel("Time (s)")
     plt.legend()
     plt.show()
@@ -185,14 +184,16 @@ if __name__ == "__main__":
                        'F7','F8','F3','F4','T7','T8','P3','P4']
     
     pre = EEGPreprocessor(csv_path, epoch_table_path, selected_labels)
+    pre.apply_notch()
     plot_epochs_data(pre.epochs, "raw")
     pre.rereference()
     plot_epochs_data(pre.epochs, "ref") 
     pre.apply_bandpass()
-    pre.apply_notch()
     plot_epochs_data(pre.epochs, "filter")
+    plot_long_concat(pre.epochs)
     pre.apply_ica()
     pre.apply_adjust()
     plot_epochs_data(pre.epochs, "artifact")
+    plot_long_concat(pre.epochs)
     # pre.apply_zscore()
     pre.save(save_dir, base_name)

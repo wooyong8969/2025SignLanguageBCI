@@ -11,8 +11,8 @@ from EEGModels import EEGNet
 import matplotlib.pyplot as plt
 
 # 1. 파일 경로 설정
-mat_path = "current_experiments/DATA/processed/experiment_001/experiment_001(1-8)_cleaned.mat"
-label_path = "current_experiments/DATA/processed/experiment_001/experiment_001(1-8)_labels.csv"
+mat_path = "current_experiments/DATA/processed/experiment_001/experiment_001(6-8)_cleaned.mat"
+label_path = "current_experiments/DATA/processed/experiment_001/experiment_001(6-8)_labels.csv"
 
 # 2. 데이터 불러오기
 mat = scipy.io.loadmat(mat_path)

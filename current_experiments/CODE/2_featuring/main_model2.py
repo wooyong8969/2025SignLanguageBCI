@@ -11,8 +11,11 @@ from sklearn.feature_selection import SelectFromModel
 import matplotlib.pyplot as plt
 
 # 데이터 로드
-features = np.load(r'current_experiments\DATA\open\BCI competition IV\experiment_iv_cleaned.npy')
-labels = np.load(r'current_experiments\DATA\open\BCI competition IV\experiment_iv_labels.npy')
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-8)_cleaned.npy'
+labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-8)_labels.npy'
+
+features = np.load(features_path)
+labels = np.load(labels_path)
 
 # Train/Test 분리
 X_train, X_test, y_train, y_test = train_test_split(
@@ -110,7 +113,7 @@ def try_all_models(X_train, X_test, prefix=""):
 result_list += try_all_models(X_train_scaled, X_test_scaled, prefix="")
 
 # [B] L1 정규화 기반 특징 선택 후 실험
-l1_selector = SelectFromModel(LogisticRegression(penalty='l1', solver='liblinear', C=0.1, random_state=42))
+l1_selector = SelectFromModel(LogisticRegression(penalty='l1', solver='liblinear', C=1, random_state=42))
 X_train_l1 = l1_selector.fit_transform(X_train_scaled, y_train)
 X_test_l1 = l1_selector.transform(X_test_scaled)
 print(f"L1 정규화 후 feature 개수: {X_train_l1.shape[1]}")

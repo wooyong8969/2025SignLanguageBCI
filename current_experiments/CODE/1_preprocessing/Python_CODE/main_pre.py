@@ -14,6 +14,8 @@ class EEGPreprocessor:
         self.sfreq = sfreq
         self.cut_time = cut_time
         self.raw_data = pd.read_csv(csv_path, sep='\t', header=None, engine='python').values
+        print(f"[RAW CSV 불러오기] 전체 행 개수: {self.raw_data.shape[0]}")
+        print(f"[RAW CSV 불러오기] 전체 열 개수: {self.raw_data.shape[1]}")
         self.epoch_table = pd.read_excel(epoch_path)
         self.epochs_data, self.labels = self._epoch_data()
         self.epochs = self._create_mne_epochs()
@@ -24,18 +26,25 @@ class EEGPreprocessor:
         raw = self.raw_data
         fs = self.sfreq
         cut = int(self.cut_time * fs)
-        data = raw[cut:, 1:17]
-        offset = cut
+        data = raw[cut:, 1:17]  # EEG에서 앞 10초 제거
         epoched = []
         labels = []
-        for _, row in self.epoch_table.iterrows():
-            start = int(row[0] * fs) - offset
-            end = int(row[1] * fs) - offset
-            if start < 0 or end > data.shape[0]:
+
+        for i, row in self.epoch_table.iterrows():
+            start_time = row[0] + self.cut_time
+            end_time = row[1] + self.cut_time
+
+            start = int(start_time * fs) - cut
+            end = int(end_time * fs) - cut
+
+            if end > data.shape[0]:
+                print(f"[Epoch {i}] Skipped → end={end} > data length {data.shape[0]}")
                 continue
+
             segment = data[start:end].T
             epoched.append(segment)
             labels.append(str(row[2]))
+
         return epoched, labels
 
     def _create_mne_epochs(self):
@@ -127,10 +136,10 @@ class EEGPreprocessor:
 
 
 if __name__ == "__main__":
-    csv_path = r'current_experiments\DATA\raw\experiment_001\SI_30(8).csv'
-    epoch_table_path = r'current_experiments\DATA\video\experiment_001_30_epochs.xlsx'
-    save_dir = r'current_experiments\DATA\processed\experiment_001'
-    base_name = 'experiment_001(8)'
+    csv_path = r'current_experiments\DATA\raw\experiment_002\ME_30.csv'
+    epoch_table_path = r'current_experiments\DATA\video\experiment_002_30_epochs.xlsx'
+    save_dir = r'current_experiments\DATA\processed\experiment_002'
+    base_name = 'experiment_002(1)'
 
     selected_labels = ['FP1','FP2','C3','C4','P7','P8','O1','O2',
                        'F7','F8','F3','F4','T7','T8','P3','P4']

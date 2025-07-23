@@ -15,11 +15,11 @@ from mpl_toolkits.mplot3d import Axes3D
 
 # ---------- 1. 파일 경로 ---------- #
 
-features_path = r'current_experiments\DATA\open\BCI competition IV\experiment_iv_cleaned.npy'
-labels_path = r'current_experiments\DATA\open\BCI competition IV\experiment_iv_labels.npy'
+# features_path = r'current_experiments\DATA\open\BCI competition IV\experiment_iv_cleaned.npy'
+# labels_path = r'current_experiments\DATA\open\BCI competition IV\experiment_iv_labels.npy'
 
-# features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-8)_cleaned.npy'
-# labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-8)_labels.npy'
+features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-8)_cleaned.npy'
+labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-8)_labels.npy'
 
 # clf_lda = load(r'current_experiments\MODEL\trained_model_after_lda.joblib')
 # pipeline = load(r'current_experiments\MODEL\feature_selector.joblib')

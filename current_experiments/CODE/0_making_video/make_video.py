@@ -11,19 +11,18 @@ fps = 10
 text_duration = 3  # 이미지 표시 시간 (초)
 black_min = 3  # 검정 화면 최소 시간 (초)
 black_max = 3  # 검정 화면 최대 시간 (초)
-output_file = r"current_experiments\DATA\video\experiment_001_10_video.mp4"
-excel_output = r"current_experiments\DATA\video\experiment_001_10_epochs.xlsx"
+output_file = r"current_experiments\DATA\video\experiment_003_10_video.mp4"
+excel_output = r"current_experiments\DATA\video\experiment_003_10_epochs.xlsx"
 
 # 이미지 파일 경로
-image_folder = r"D:\W00Y0NG\PRGM2\2025BCI\current_experiments\CODE\0_making_video\Image"
+image_folder = r"current_experiments\CODE\0_making_video\StimuliImage"
 image_files = {
-    "Hello": os.path.join(image_folder, "hello.png"),
-    "Thank you": os.path.join(image_folder, "thanku.png"),
-    "Sorry": os.path.join(image_folder, "sorry.png"),
-    "Help me": os.path.join(image_folder, "helpme.png")
+    "Hello": os.path.join(image_folder, "multi_hello.png"),
+    "Thank you": os.path.join(image_folder, "multi_thanku.png"),
+    "Sorry": os.path.join(image_folder, "multi_sorry.png"),
+    "Help me": os.path.join(image_folder, "multi_helpme.png")
 }
 
-# 각 이미지 30번씩 등장, 순서 랜덤-
 stimuli_list = list(image_files.items()) * 10
 random.shuffle(stimuli_list)
 
@@ -53,7 +52,7 @@ def create_black_frame(duration):
     global total_time
     start_time = total_time
     for _ in range(duration * fps):
-        frame = np.zeros((screen_size[1], screen_size[0], 3), dtype=np.uint8)
+        frame = np.ones((screen_size[1], screen_size[0], 3), dtype=np.uint8)*255
 
         cv2.line(frame, (960 - 50, 540), (960 + 50, 540), (0, 0, 255), 5)
         cv2.line(frame, (960, 540 - 50), (960, 540 + 50), (0, 0, 255), 5)

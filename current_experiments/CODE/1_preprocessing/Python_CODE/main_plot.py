@@ -147,7 +147,7 @@ def plot_epochs_data(epochs, title, epoch_idx=1, ch_idxs=None):
         ch_idxs = range(min(16, data.shape[0]))  # 기본: 앞 8채널
 
     plt.figure(figsize=(12, 5))
-    offset = 0
+    offset = 100
     # plt.plot(times, data[5, :] + 0 * offset, label=ch_names[5])
     for i, ch in enumerate(ch_idxs):
         plt.plot(times, data[ch, :] + i * offset, label=ch_names[ch])
@@ -185,15 +185,16 @@ if __name__ == "__main__":
     
     pre = EEGPreprocessor(csv_path, epoch_table_path, selected_labels)
     pre.apply_notch()
-    plot_epochs_data(pre.epochs, "raw")
-    pre.rereference()
-    plot_epochs_data(pre.epochs, "ref") 
+    # plot_epochs_data(pre.epochs, "raw")
+    # plot_long_concat(pre.epochs)
     pre.apply_bandpass()
-    plot_epochs_data(pre.epochs, "filter")
+    # plot_epochs_data(pre.epochs, "filter")
     plot_long_concat(pre.epochs)
     pre.apply_ica()
     pre.apply_adjust()
     plot_epochs_data(pre.epochs, "artifact")
-    plot_long_concat(pre.epochs)
-    # pre.apply_zscore()
+    # plot_long_concat(pre.epochs)
+    pre.rereference()
+    # plot_epochs_data(pre.epochs, "ref")
+    # plot_long_concat(pre.epochs)
     pre.save(save_dir, base_name)

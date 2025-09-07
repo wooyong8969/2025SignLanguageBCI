@@ -1,134 +1,130 @@
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import ConfusionMatrixDisplay
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.svm import SVC
-from sklearn.decomposition import PCA
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LogisticRegression
 from sklearn.feature_selection import SelectFromModel
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 import matplotlib.pyplot as plt
+import os
+from joblib import dump, load
+from collections import Counter
+import pandas as pd
+import seaborn as sns
+from mpl_toolkits.mplot3d import Axes3D
 
-# 데이터 로드
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-8)_cleaned.npy'
-labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(1-8)_labels.npy'
+# 라벨 인코더 불러오기
+le = load(r'current_experiments\MODEL\label_encoder_100.joblib')
 
-features = np.load(features_path)
-labels = np.load(labels_path)
+# feature, label 불러오기
+features_path = r'current_experiments\DATA\Final\eeg_sign_features.npy'
+labels_path = r'current_experiments\DATA\Final\eeg_sign_features_labels.npy'
 
-# Train/Test 분리
-X_train, X_test, y_train, y_test = train_test_split(
-    features, labels, test_size=0.2, stratify=labels, random_state=42
-)
+if os.path.exists(features_path) and os.path.exists(labels_path):
+    print("저장된 feature 파일 불러오는 중...")
+    features = np.load(features_path)
+    encoded_labels = np.load(labels_path)
+else:
+    raise FileNotFoundError("feature 또는 label 파일이 존재하지 않습니다.")
 
-# 표준화
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
+print("기존 feature shape:", features.shape)
+print("클래스 분포:", Counter(encoded_labels))
 
-result_list = []
+# 단일 seed 실험
+train_accs = []
+test_accs = []
+cms = []
 
-def try_all_models(X_train, X_test, prefix=""):
-    res = []
-    # 1. LDA(3) + LogReg
-    lda = LinearDiscriminantAnalysis(n_components=3)
-    X_train_lda = lda.fit_transform(X_train, y_train)
-    X_test_lda = lda.transform(X_test)
-    clf_logreg = LogisticRegression(max_iter=500, random_state=42)
-    clf_logreg.fit(X_train_lda, y_train)
-    train_acc = clf_logreg.score(X_train_lda, y_train)
-    test_acc = clf_logreg.score(X_test_lda, y_test)
-    res.append((f"{prefix}LDA(3)+LogReg", train_acc, test_acc, clf_logreg, X_test_lda))
+for seed in (10,):
+    X_train, X_test, y_train, y_test = train_test_split(
+        features, encoded_labels, test_size=0.2, stratify=encoded_labels, random_state=seed
+    )
 
-    # 2. LDA(3) + SVM-linear
-    clf_svm_linear = SVC(kernel='linear', C=1, random_state=42)
-    clf_svm_linear.fit(X_train_lda, y_train)
-    train_acc = clf_svm_linear.score(X_train_lda, y_train)
-    test_acc = clf_svm_linear.score(X_test_lda, y_test)
-    res.append((f"{prefix}LDA(3)+SVM-linear", train_acc, test_acc, clf_svm_linear, X_test_lda))
+    pipeline = Pipeline([
+        ('scaler', StandardScaler()),
+        ('feature_selection', SelectFromModel(
+            LogisticRegression(penalty='l1', solver='liblinear', C=10, max_iter=1000)
+        ))
+    ])
 
-    # 3. LDA(3) + SVM-rbf
-    clf_svm_rbf = SVC(kernel='rbf', C=1, gamma='scale', random_state=42)
-    clf_svm_rbf.fit(X_train_lda, y_train)
-    train_acc = clf_svm_rbf.score(X_train_lda, y_train)
-    test_acc = clf_svm_rbf.score(X_test_lda, y_test)
-    res.append((f"{prefix}LDA(3)+SVM-rbf", train_acc, test_acc, clf_svm_rbf, X_test_lda))
+    X_train_sel = pipeline.fit_transform(X_train, y_train)
+    X_test_sel = pipeline.transform(X_test)
 
-    # 4. PCA(3) + LogReg
-    pca = PCA(n_components=3, random_state=42)
-    X_train_pca = pca.fit_transform(X_train)
-    X_test_pca = pca.transform(X_test)
-    clf_logreg2 = LogisticRegression(max_iter=500, random_state=42)
-    clf_logreg2.fit(X_train_pca, y_train)
-    train_acc = clf_logreg2.score(X_train_pca, y_train)
-    test_acc = clf_logreg2.score(X_test_pca, y_test)
-    res.append((f"{prefix}PCA(3)+LogReg", train_acc, test_acc, clf_logreg2, X_test_pca))
+    lda_clf = LinearDiscriminantAnalysis()
+    lda_clf.fit(X_train_sel, y_train)
 
-    # 5. PCA(3) + SVM-linear
-    clf_svm_linear2 = SVC(kernel='linear', C=1, random_state=42)
-    clf_svm_linear2.fit(X_train_pca, y_train)
-    train_acc = clf_svm_linear2.score(X_train_pca, y_train)
-    test_acc = clf_svm_linear2.score(X_test_pca, y_test)
-    res.append((f"{prefix}PCA(3)+SVM-linear", train_acc, test_acc, clf_svm_linear2, X_test_pca))
+    train_acc = lda_clf.score(X_train_sel, y_train)
+    test_acc = lda_clf.score(X_test_sel, y_test)
+    train_accs.append(train_acc)
+    test_accs.append(test_acc)
 
-    # 6. PCA(3) + SVM-rbf
-    clf_svm_rbf2 = SVC(kernel='rbf', C=1, gamma='scale', random_state=42)
-    clf_svm_rbf2.fit(X_train_pca, y_train)
-    train_acc = clf_svm_rbf2.score(X_train_pca, y_train)
-    test_acc = clf_svm_rbf2.score(X_test_pca, y_test)
-    res.append((f"{prefix}PCA(3)+SVM-rbf", train_acc, test_acc, clf_svm_rbf2, X_test_pca))
+    y_pred = lda_clf.predict(X_test_sel)
+    cm = confusion_matrix(y_test, y_pred, labels=np.unique(encoded_labels))
+    cms.append(cm)
 
-    # 7. Random Forest (전체 feature)
-    clf_rf = RandomForestClassifier(n_estimators=100, max_depth=4, random_state=42)
-    clf_rf.fit(X_train, y_train)
-    train_acc = clf_rf.score(X_train, y_train)
-    test_acc = clf_rf.score(X_test, y_test)
-    res.append((f"{prefix}RF(all)", train_acc, test_acc, clf_rf, X_test))
+print(f"[LDA 분류기] 훈련 정확도 평균: {np.mean(train_accs):.4f} (±{np.std(train_accs):.4f})")
+print(f"[LDA 분류기] 테스트 정확도 평균: {np.mean(test_accs):.4f} (±{np.std(test_accs):.4f})")
 
-    # 8. LogReg (전체 feature)
-    clf_logreg_all = LogisticRegression(max_iter=500, random_state=42)
-    clf_logreg_all.fit(X_train, y_train)
-    train_acc = clf_logreg_all.score(X_train, y_train)
-    test_acc = clf_logreg_all.score(X_test, y_test)
-    res.append((f"{prefix}LogReg(all)", train_acc, test_acc, clf_logreg_all, X_test))
 
-    # 9. SVM-linear (전체 feature)
-    clf_svm_linear_all = SVC(kernel='linear', C=1, random_state=42)
-    clf_svm_linear_all.fit(X_train, y_train)
-    train_acc = clf_svm_linear_all.score(X_train, y_train)
-    test_acc = clf_svm_linear_all.score(X_test, y_test)
-    res.append((f"{prefix}SVM-linear(all)", train_acc, test_acc, clf_svm_linear_all, X_test))
+# --------------------------------------------------
+# ✅ LDA 3D 시각화 (전체 데이터 기준)
+# --------------------------------------------------
 
-    # 10. SVM-rbf (전체 feature)
-    clf_svm_rbf_all = SVC(kernel='rbf', C=1, gamma='scale', random_state=42)
-    clf_svm_rbf_all.fit(X_train, y_train)
-    train_acc = clf_svm_rbf_all.score(X_train, y_train)
-    test_acc = clf_svm_rbf_all.score(X_test, y_test)
-    res.append((f"{prefix}SVM-rbf(all)", train_acc, test_acc, clf_svm_rbf_all, X_test))
+# 전체 데이터에 대해 pipeline 적용 (누설 방지를 위해 독립적으로 fit)
+full_pipeline = Pipeline([
+    ('scaler', StandardScaler()),
+    ('feature_selection', SelectFromModel(
+        LogisticRegression(penalty='l1', solver='liblinear', C=10, max_iter=1000)
+    ))
+])
+X_selected = full_pipeline.fit_transform(features, encoded_labels)
 
-    return res
+# LDA 차원 축소 (n_components=3)
+lda_vis = LinearDiscriminantAnalysis(n_components=3)
+X_lda = lda_vis.fit_transform(X_selected, encoded_labels)
 
-# 원본/표준화 데이터 실험
-result_list += try_all_models(X_train_scaled, X_test_scaled, prefix="")
+# 시각화용 데이터프레임 생성
+df_lda = pd.DataFrame(X_lda, columns=['LD1', 'LD2', 'LD3'])
+df_lda['label'] = le.inverse_transform(encoded_labels)
 
-# [B] L1 정규화 기반 특징 선택 후 실험
-l1_selector = SelectFromModel(LogisticRegression(penalty='l1', solver='liblinear', C=1, random_state=42))
-X_train_l1 = l1_selector.fit_transform(X_train_scaled, y_train)
-X_test_l1 = l1_selector.transform(X_test_scaled)
-print(f"L1 정규화 후 feature 개수: {X_train_l1.shape[1]}")
-result_list += try_all_models(X_train_l1, X_test_l1, prefix="L1+")
+# 3D 시각화
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111, projection='3d')
 
-# 결과 출력
-for name, train_acc, test_acc, _, _ in result_list:
-    print(f"{name}: 훈련 정확도 = {train_acc:.4f} / 테스트 정확도 = {test_acc:.4f}")
+labels_unique = df_lda['label'].unique()
+colors = sns.color_palette('Set2', n_colors=len(labels_unique))
 
-# 가장 성능 좋은 조합 출력
-best_combo = max(result_list, key=lambda x: x[2])
-print(f"\n>>> 최적 조합: {best_combo[0]}, 테스트 정확도 = {best_combo[2]:.4f}")
+for label, color in zip(labels_unique, colors):
+    subset = df_lda[df_lda['label'] == label]
+    ax.scatter(subset['LD1'], subset['LD2'], subset['LD3'],
+               label=label, color=color, s=60)
 
-# Confusion matrix 시각화 (최고 정확도 조합 모델)
-best_name, _, _, best_model, best_X_test = best_combo
-disp = ConfusionMatrixDisplay.from_estimator(best_model, best_X_test, y_test)
-plt.title(f"{best_name} Confusion Matrix")
+ax.set_title("LDA Feature Projection (3D)", fontsize=14)
+ax.set_xlabel("LD1")
+ax.set_ylabel("LD2")
+ax.set_zlabel("LD3")
+ax.legend(title="Class")
+plt.tight_layout()
 plt.show()
+
+
+
+# 평균 혼동 행렬 계산 및 시각화
+mean_cm = np.mean(cms, axis=0)
+marker_to_word = {
+    101: 'hello',
+    102: 'help me',
+    103: 'sorry',
+    104: 'thank u'
+}
+display_labels = [marker_to_word[cls] for cls in le.inverse_transform(np.unique(encoded_labels))]
+
+disp = ConfusionMatrixDisplay(confusion_matrix=mean_cm, display_labels=display_labels)
+disp.plot()
+plt.title("<sign> Confusion Matrix (random_state=10)")
+plt.grid(False)
+plt.tight_layout()
+plt.show()
+

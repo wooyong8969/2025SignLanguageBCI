@@ -2,14 +2,9 @@ import pandas as pd
 import os
 
 csv_files = [
-    # r"current_experiments\DATA\raw\experiment_001\SI_30(1).csv",
-    # r"current_experiments\DATA\raw\experiment_001\SI_30(2).csv",
-    # r"current_experiments\DATA\raw\experiment_001\SI_30(3).csv",
-    # r"current_experiments\DATA\raw\experiment_001\SI_30(4).csv",
-    # r"current_experiments\DATA\raw\experiment_001\SI_30(5).csv",
-    r"current_experiments\DATA\raw\experiment_001\SI_30(6).csv",
-    r"current_experiments\DATA\raw\experiment_001\SI_10(7).csv",
-    r"current_experiments\DATA\raw\experiment_001\SI_30(8).csv",
+    r"current_experiments\DATA\Final\eeg_sign_session1.csv",
+    r"current_experiments\DATA\Final\eeg_sign_session2.csv",
+    r"current_experiments\DATA\Final\eeg_sign_session3.csv",
 ]
 
 raw_data_combined = pd.concat(
@@ -19,25 +14,26 @@ raw_data_combined = pd.concat(
 
 print(len(raw_data_combined))
 
-raw_data_combined.to_csv(r"current_experiments\DATA\raw\experiment_001\SI_30(6-8).csv", sep='\t', header=False, index=False)
+raw_data_combined.to_csv(r"current_experiments\DATA\Final\eeg_sign_session1-3.csv", sep='\t', header=False, index=False)
 print("CSV 병합 완료.")
 
 
-excel_files = [
-    # r"current_experiments\DATA\video\experiment_001_30_epochs.xlsx",
-    # r"current_experiments\DATA\video\experiment_001_30_epochs.xlsx",
-    # r"current_experiments\DATA\video\experiment_001_30_epochs.xlsx",
-    # r"current_experiments\DATA\video\experiment_001_30_epochs.xlsx",
-    # r"current_experiments\DATA\video\experiment_001_30_epochs.xlsx",
-    r"current_experiments\DATA\video\experiment_001_30_epochs.xlsx",
-    r"current_experiments\DATA\video\experiment_001_10_epochs.xlsx",
-    r"current_experiments\DATA\video\experiment_001_30_epochs.xlsx",
-]
+# excel_files = [
+#     # r"current_experiments\DATA\video\experiment_001_30_epochs.xlsx",
+#     # r"current_experiments\DATA\video\experiment_001_30_epochs.xlsx",
+#     # r"current_experiments\DATA\video\experiment_001_30_epochs.xlsx",
+#     # r"current_experiments\DATA\video\experiment_001_30_epochs.xlsx",
+#     # r"current_experiments\DATA\video\experiment_001_30_epochs.xlsx",
+#     r"current_experiments\DATA\video\experiment_002_10_epochs.xlsx",
+#     r"current_experiments\DATA\video\experiment_002_10_epochs.xlsx",
+#     r"current_experiments\DATA\video\experiment_002_10_epochs.xlsx",
+#     r"current_experiments\DATA\video\experiment_002_10_epochs.xlsx",
+# ]
 
-epoch_combined = pd.concat(
-    [pd.read_excel(f) for f in excel_files],
-    ignore_index=True
-)
+# epoch_combined = pd.concat(
+#     [pd.read_excel(f) for f in excel_files],
+#     ignore_index=True
+# )
 
-epoch_combined.to_excel(r"current_experiments\DATA\video\experiment_001_70_epochs.xlsx", index=False)
-print("Excel 병합 완료.")
+# epoch_combined.to_excel(r"current_experiments\DATA\video\experiment_003_40_epochs.xlsx", index=False)
+# print("Excel 병합 완료.")

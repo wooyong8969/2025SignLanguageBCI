@@ -16,17 +16,25 @@ from joblib import dump, load
 # features_path = r'current_experiments\DATA\open\BCI competition IV\experiment_iv_cleaned.npy'
 # labels_path = r'current_experiments\DATA\open\BCI competition IV\experiment_iv_labels.npy'
 
-# mat_path = r'current_experiments\DATA\processed\experiment_002\experiment_002(1)_cleaned.mat'
-# label_csv_path = r'current_experiments\DATA\processed\experiment_002\experiment_002(1)_labels.csv'
+# mat_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(_)_cleaned.mat'
+# label_csv_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(_)_labels.csv'
 
-# features_path = r'current_experiments\DATA\processed\experiment_002\experiment_002(1)_cleaned.npy'
-# labels_path = r'current_experiments\DATA\processed\experiment_002\experiment_002(1)_labels.npy'
+# features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(_)_cleaned.npy'
+# labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(_)_labels.npy'
 
-mat_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_cleaned.mat'
-label_csv_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_labels.csv'
+# mat_path = r'current_experiments\DATA\processed\experiment_003\experiment_003_cleaned.mat'
+# label_csv_path = r'current_experiments\DATA\processed\experiment_003\experiment_003_labels.csv'
 
-features_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)_cleaned.npy'
-labels_path = r'current_experiments\DATA\processed\experiment_001\experiment_001(6-8)labels.npy'
+# features_path = r'current_experiments\DATA\processed\experiment_003\experiment_003_cleaned.npy'
+# labels_path = r'current_experiments\DATA\processed\experiment_003\experiment_003_labels.npy'
+
+mat_path = r'current_experiments\DATA\Final\eeg_sign_epochs.npy'
+label_csv_path = r'current_experiments\DATA\Final\eeg_sign_epochs.npy'
+
+features_path = r'current_experiments\DATA\Final\eeg_sign_labels.npy'
+labels_path = r'current_experiments\DATA\Final\eeg_sign_labels.npy'
+
+
 
 # ---------- 1. 전처리 된 데이터셋 불러오기 ---------- #
 
@@ -55,8 +63,8 @@ print("특징 추출 중...")
 extractor = DWTFeatureExtractor(wavelet='coif1', level=5)
 time_features, freq_features = extractor.extract(aug_eeg)
 
-flat_time = extractor.flatten_feature_dict(time_features, extractor.bands)
-flat_freq = extractor.flatten_feature_dict(freq_features, extractor.bands)
+# flat_time = extractor.flatten_feature_dict(time_features, extractor.bands)
+# flat_freq = extractor.flatten_feature_dict(freq_features, extractor.bands)
 csp_features = extractor.extract_csp_features(aug_eeg, aug_labels, n_components=4, save_path=csp)
 # riemannian_features = extractor.extract_riemannian_features(aug_eeg)
 

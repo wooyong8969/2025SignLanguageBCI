@@ -5,8 +5,8 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.optimizers import Adam
+from keras.utils import to_categorical
+from keras.optimizers import Adam
 from EEGModels import EEGNet
 import matplotlib.pyplot as plt
 

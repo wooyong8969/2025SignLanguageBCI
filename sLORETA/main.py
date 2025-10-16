@@ -4,7 +4,7 @@ from mne import read_source_estimate
 from mne import read_labels_from_annot
 
 # 저장 위치
-save_dir = "sLORETA\\eeg_multi_epochs"
+save_dir = "sLORETA\\eeg_sign_epochs_30"
 subjects_dir = os.path.expanduser("C:/Users/wooyo/mne_data/MNE-fsaverage-data")
 
 # 좌반구 Broca & Wernicke, 운동 피질 이름 (Desikan-Killiany atlas 기준)
@@ -16,7 +16,7 @@ def load_and_plot(prefix):
     try:
         global label
         stc = read_source_estimate(
-            os.path.join(save_dir, label, f"{prefix}-sLORETA"),
+            os.path.join(save_dir, f"{prefix}-sLORETA"),
             subject='fsaverage'
         )
         print(f"[불러오기 성공] {prefix}-sLORETA")

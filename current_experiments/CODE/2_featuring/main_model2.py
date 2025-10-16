@@ -19,8 +19,8 @@ from mpl_toolkits.mplot3d import Axes3D
 le = load(r'current_experiments\MODEL\label_encoder_100.joblib')
 
 # feature, label 불러오기
-features_path = r'current_experiments\DATA\Final\eeg_sign_features.npy'
-labels_path = r'current_experiments\DATA\Final\eeg_sign_features_labels.npy'
+features_path = r'current_experiments\DATA\Final\eeg_motor_features.npy'
+labels_path = r'current_experiments\DATA\Final\eeg_motor_features_labels.npy'
 
 if os.path.exists(features_path) and os.path.exists(labels_path):
     print("저장된 feature 파일 불러오는 중...")
@@ -37,7 +37,7 @@ train_accs = []
 test_accs = []
 cms = []
 
-for seed in (10,):
+for seed in ():
     X_train, X_test, y_train, y_test = train_test_split(
         features, encoded_labels, test_size=0.2, stratify=encoded_labels, random_state=seed
     )
@@ -123,7 +123,7 @@ display_labels = [marker_to_word[cls] for cls in le.inverse_transform(np.unique(
 
 disp = ConfusionMatrixDisplay(confusion_matrix=mean_cm, display_labels=display_labels)
 disp.plot()
-plt.title("<sign> Confusion Matrix (random_state=10)")
+plt.title("<motor> Confusion Matrix (random_state=10)")
 plt.grid(False)
 plt.tight_layout()
 plt.show()

@@ -182,7 +182,7 @@ data_topo = np.random.rand(C_plot)
 fig, ax = plt.subplots(figsize=(7, 7))
 topomap_ax = fig.add_axes([0.25, 0.25, 0.5, 0.5])
 mne.viz.plot_topomap(data_topo, pos, axes=ax, outlines='head',
-                     contours=0, sensors=False, cmap='Reds', show=False)
+                     contours=0, sensors=False, cmap='Blues', show=False)
 for im in ax.get_images():
     im.set_alpha(0.35)
 
